@@ -207,23 +207,24 @@ export default function DigitalTwinMap() {
     }).filter(Boolean)
   }, [])
 
-  const layers = [
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const layers: any[] = [
     // Base Network Routes
-    new PathLayer({
+    new (PathLayer as any)({
       id: 'network-routes',
       data: pathData,
-      getPath: d => d.path,
+      getPath: (d: any) => d.path,
       getColor: [148, 163, 184, 150], // Slate-400 with opacity
       getWidth: 2,
       widthMinPixels: 1,
     }),
 
     // Base Stations
-    new ScatterplotLayer({
+    new (ScatterplotLayer as any)({
       id: 'stations',
       data: STATIONS,
-      getPosition: d => [d.lng, d.lat],
-      getFillColor: d => {
+      getPosition: (d: any) => [d.lng, d.lat],
+      getFillColor: (d: any) => {
         const health = stationHealth.find(h => h.station_id === d.id)
         if (!health) return [15, 23, 42]
         if (health.status === 'critical') return [239, 68, 68]
@@ -236,18 +237,18 @@ export default function DigitalTwinMap() {
       radiusMinPixels: 4,
       stroked: true,
       pickable: true,
-      onHover: info => setHoverInfo(info.object ? { ...info.object, x: info.x, y: info.y } : null)
+      onHover: (info: any) => setHoverInfo(info.object ? { ...info.object, x: info.x, y: info.y } : null)
     }),
 
     // Network Shockwaves
-    new ScatterplotLayer({
+    new (ScatterplotLayer as any)({
       id: 'network-shockwaves',
       data: shockwaves,
-      getPosition: d => [d.lng, d.lat],
+      getPosition: (d: any) => [d.lng, d.lat],
       getFillColor: [239, 68, 68, 0], // Transparent fill
-      getLineColor: d => [239, 68, 68, Math.max(0, 255 * (1 - d.radius / d.maxRadius))], // Fade out
+      getLineColor: (d: any) => [239, 68, 68, Math.max(0, 255 * (1 - d.radius / d.maxRadius))], // Fade out
       getLineWidth: 4,
-      getRadius: d => d.radius,
+      getRadius: (d: any) => d.radius,
       stroked: true,
       filled: false,
       updateTriggers: {
@@ -257,11 +258,11 @@ export default function DigitalTwinMap() {
     }),
 
     // Active Trains
-    new ScatterplotLayer({
+    new (ScatterplotLayer as any)({
       id: 'train-locations',
       data: trains,
-      getPosition: d => [d.lng, d.lat],
-      getFillColor: d => {
+      getPosition: (d: any) => [d.lng, d.lat],
+      getFillColor: (d: any) => {
         if (d.status === 'delayed') return [239, 68, 68] // Red
         // Color by category
         if (d.type === 'Rajdhani' || d.type === 'Duronto') return [250, 204, 21] // Gold
@@ -276,10 +277,10 @@ export default function DigitalTwinMap() {
     }),
 
     // Incident Heatmap
-    new HexagonLayer({
+    new (HexagonLayer as any)({
       id: 'incident-heatmap',
       data: incidentPoints,
-      getPosition: d => d,
+      getPosition: (d: any) => d,
       radius: 40000,
       elevationScale: 1000,
       extruded: true,
@@ -296,14 +297,14 @@ export default function DigitalTwinMap() {
     }),
 
     // Cascading Impact Arcs
-    new ArcLayer({
+    new (ArcLayer as any)({
       id: 'cascading-impacts',
       data: impactArcs,
-      getSourcePosition: d => d.source,
-      getTargetPosition: d => d.target,
+      getSourcePosition: (d: any) => d.source,
+      getTargetPosition: (d: any) => d.target,
       getSourceColor: [239, 68, 68, 255], // Red
       getTargetColor: [245, 158, 11, 200], // Amber
-      getWidth: d => Math.max(2, d.value),
+      getWidth: (d: any) => Math.max(2, d.value),
       widthScale: 1.5,
       opacity: 0.8,
       greatCircle: true,
@@ -315,7 +316,7 @@ export default function DigitalTwinMap() {
     <div className="w-full h-full relative bg-slate-900">
       <DeckGL
         viewState={mapViewport}
-        onViewStateChange={({ viewState }) => setMapViewport(viewState)}
+        onViewStateChange={({ viewState }: any) => setMapViewport(viewState)}
         controller={{ dragRotate: true }}
         layers={layers}
       >

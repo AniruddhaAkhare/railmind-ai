@@ -34,8 +34,9 @@ def preview_import():
     except ValueError as e:
         return jsonify({'error': str(e)}), 400
 
-    # Generate suggestions based on preview (before import)
-    suggestions = generate_next_step_suggestions(preview, {})
+    # Generate suggestions based on preview (before import), including 3D inspections
+    visualizations = preview.get('visualizations', [])
+    suggestions = generate_next_step_suggestions(preview, {}, visualizations)
 
     return jsonify({
         'preview': {
@@ -45,7 +46,8 @@ def preview_import():
             'has_errors': preview['has_errors'],
             'errors': preview['errors'],
             'summary': preview['summary'],
-            'events': preview['events'],  # first 50 for preview
+            'events': preview['events'],
+            'visualizations': visualizations,
         },
         'suggestions': suggestions,
     }), 200
@@ -59,40 +61,52 @@ def confirm():
       { "events": [...], "trigger_agents": true }
     Returns: import results + post-import suggestions.
     """
-    data = request.get_json(silent=True)
-    if not data or 'events' not in data:
-        return jsonify({'error': 'Provide "events" array in JSON body.'}), 400
+    try:
+        data = request.get_json(silent=True)
+        if not data or 'events' not in data:
+            return jsonify({'error': 'Provide "events" array in JSON body.'}), 400
 
-    events = data['events']
-    trigger_agents = data.get('trigger_agents', True)
+        events = data['events']
+        trigger_agents = data.get('trigger_agents', True)
 
-    if not isinstance(events, list) or len(events) == 0:
-        return jsonify({'error': '"events" must be a non-empty array.'}), 400
+        if not isinstance(events, list) or len(events) == 0:
+            return jsonify({'error': '"events" must be a non-empty array.'}), 400
 
-    result = confirm_import(events, trigger_agents=trigger_agents)
+        result = confirm_import(events, trigger_agents=trigger_agents)
 
-    # Generate post-import suggestions
-    summary = {
-        'by_severity': {},
-        'by_type': {},
-        'total_affected_passengers': 0,
-        'total_estimated_delay_minutes': 0,
-        'total_records': result['imported_count'],
-    }
-    for e in events:
-        sev = e.get('severity', 'medium')
-        etype = e.get('event_type', 'unknown')
-        summary['by_severity'][sev] = summary['by_severity'].get(sev, 0) + 1
-        summary['by_type'][etype] = summary['by_type'].get(etype, 0) + 1
-        summary['total_affected_passengers'] += e.get('affected_passengers', 0)
-        summary['total_estimated_delay_minutes'] += e.get('estimated_delay_minutes', 0)
+        # Check if any errors occurred during import
+        if result.get('error_count', 0) > 0:
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.warning(f"Import completed with {result['error_count']} error(s): {result['errors']}")
 
-    suggestions = generate_next_step_suggestions(summary, result)
+        # Generate post-import suggestions
+        summary = {
+            'by_severity': {},
+            'by_type': {},
+            'total_affected_passengers': 0,
+            'total_estimated_delay_minutes': 0,
+            'total_records': result['imported_count'],
+        }
+        for e in events:
+            sev = e.get('severity', 'medium')
+            etype = e.get('event_type', 'unknown')
+            summary['by_severity'][sev] = summary['by_severity'].get(sev, 0) + 1
+            summary['by_type'][etype] = summary['by_type'].get(etype, 0) + 1
+            summary['total_affected_passengers'] += e.get('affected_passengers', 0)
+            summary['total_estimated_delay_minutes'] += e.get('estimated_delay_minutes', 0)
 
-    return jsonify({
-        'result': result,
-        'suggestions': suggestions,
-    }), 200
+        suggestions = generate_next_step_suggestions(summary, result)
+
+        return jsonify({
+            'result': result,
+            'suggestions': suggestions,
+        }), 200
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Confirm import endpoint failed: {e}", exc_info=True)
+        return jsonify({'error': f'Import failed: {str(e)}'}), 500
 
 
 @imports_bp.route('/export/events', methods=['GET'])

@@ -64,7 +64,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       <aside className="sidebar">
 
         {/* Logo */}
-        <div className="sidebar-logo">
+        <Link to="/" className="sidebar-logo" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
               width: 34, height: 34,
@@ -80,7 +80,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               <div className="sidebar-logo-subtitle">Indian Railways Intelligence</div>
             </div>
           </div>
-        </div>
+        </Link>
 
         {/* Live status bar */}
         <div style={{

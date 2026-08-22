@@ -1,0 +1,30 @@
+[
+  {
+    "event_type": "track_defect",
+    "severity": "critical",
+    "description": "Possible rail fracture near Howrah Junction",
+    "station_id": 1,
+    "track_id": 12,
+    "chainage_m": 4380,
+    "defect_type": "rail_fracture",
+    "confidence": 0.86,
+    "sensor_source": "track_inspection_vehicle",
+    "affected_passengers": 2500,
+    "estimated_delay_minutes": 120,
+    "priority": 9
+  },
+  {
+    "event_type": "signal_failure",
+    "severity": "high",
+    "description": "Signal failure affecting eastbound services",
+    "station_id": 1,
+    "track_id": 7,
+    "chainage_m": 4210,
+    "defect_type": "signal_failure",
+    "confidence": 0.78,
+    "sensor_source": "signal_monitoring_system",
+    "affected_passengers": 800,
+    "estimated_delay_minutes": 45,
+    "priority": 8
+  }
+]

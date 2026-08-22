@@ -11,6 +11,30 @@ export interface NextStepSuggestion {
   auto_triggered: boolean
 }
 
+export type SuggestionDecision = 'pending' | 'approved' | 'rejected' | 'executed' | 'failed' | 'already_processed'
+
+export interface DefectVisualization {
+  viz_id: string
+  asset_type: 'track' | 'signal' | 'train' | 'platform' | 'ohe' | 'bridge' | string
+  asset_id: string
+  defect: {
+    type: string
+    position: { x: number; y: number; z: number }
+    confidence: number
+    severity: string
+    label: string
+  }
+  evidence: {
+    description: string
+    sensor_source: string
+    position_accuracy: 'precise' | 'estimated'
+    chainage_m?: number
+    latitude?: number
+    longitude?: number
+    [key: string]: any
+  }
+}
+
 export interface ImportPreview {
   filename: string
   total_records: number
@@ -24,6 +48,7 @@ export interface ImportPreview {
     total_estimated_delay_minutes: number
   }
   events: any[]
+  visualizations?: DefectVisualization[]
 }
 
 export interface ImportResult {
@@ -60,6 +85,12 @@ interface ImportStore {
   setResult: (r: ImportResult) => void
   setPostSuggestions: (s: NextStepSuggestion[]) => void
 
+  // 3D Inspection
+  selectedVizId: string | null
+  setSelectedVizId: (id: string | null) => void
+  inspectionDecisions: Record<string, SuggestionDecision>
+  setInspectionDecision: (vizId: string, decision: SuggestionDecision) => void
+
   // Reset
   reset: () => void
 }
@@ -73,6 +104,8 @@ const initialState = {
   importing: false,
   result: null,
   postSuggestions: [],
+  selectedVizId: null as string | null,
+  inspectionDecisions: {} as Record<string, SuggestionDecision>,
 }
 
 export const useImportStore = create<ImportStore>((set) => ({
@@ -86,6 +119,11 @@ export const useImportStore = create<ImportStore>((set) => ({
   setImporting: (importing) => set({ importing }),
   setResult: (result) => set({ result }),
   setPostSuggestions: (postSuggestions) => set({ postSuggestions }),
+  setSelectedVizId: (selectedVizId) => set({ selectedVizId }),
+  setInspectionDecision: (vizId, decision) =>
+    set((state) => ({
+      inspectionDecisions: { ...state.inspectionDecisions, [vizId]: decision },
+    })),
 
   reset: () => set(initialState),
 }))

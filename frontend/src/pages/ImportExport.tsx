@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { api } from '../config/api'
 import { useImportStore, NextStepSuggestion } from '../stores/useImportStore'
+import ImportedDefectViewer from '../components/import-export/ImportedDefectViewer'
 
 /* ─── Category + severity helpers ─── */
 const CATEGORY_ICON: Record<string, React.ReactNode> = {
@@ -175,12 +176,18 @@ export default function ImportExport() {
     preview, suggestions, setPreview, setSuggestions,
     importing, result, postSuggestions,
     setImporting, setResult, setPostSuggestions, reset,
+    selectedVizId, setSelectedVizId,
+    inspectionDecisions, setInspectionDecision,
   } = useImportStore()
 
   const [dragOver, setDragOver] = useState(false)
   const [acceptedIds, setAcceptedIds] = useState<Set<string>>(new Set())
   const [exportFormat, setExportFormat] = useState<'csv' | 'json'>('csv')
+  const [confirmError, setConfirmError] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
+  const viewerRef = useRef<HTMLDivElement>(null)
+
+  const visualizations = preview?.visualizations || []
 
   /* ─── Upload handler ─── */
   const handleUpload = useCallback(async (file: File) => {
@@ -190,9 +197,7 @@ export default function ImportExport() {
     try {
       const formData = new FormData()
       formData.append('file', file)
-      const res: any = await api.post('/imports/preview', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      const res: any = await api.post('/imports/preview', formData)
       setPreview(res.preview)
       setSuggestions(res.suggestions)
       setStep('preview')
@@ -207,16 +212,17 @@ export default function ImportExport() {
   const handleConfirm = useCallback(async () => {
     if (!preview) return
     setImporting(true)
+    setConfirmError(null)
     try {
       const res: any = await api.post('/imports/confirm', {
         events: preview.events,
         trigger_agents: true,
-      })
+      }, { timeout: 60000 })
       setResult(res.result)
       setPostSuggestions(res.suggestions)
       setStep('results')
     } catch (err: any) {
-      setUploadError(err?.response?.data?.error || 'Import failed')
+      setConfirmError(err?.response?.data?.error || err?.message || 'Import failed. Please try again.')
     } finally {
       setImporting(false)
     }
@@ -225,9 +231,24 @@ export default function ImportExport() {
   /* ─── Accept suggestion ─── */
   const handleAccept = useCallback((s: NextStepSuggestion) => {
     setAcceptedIds((prev) => new Set(prev).add(s.id))
-    // In a full implementation, this would trigger the actual action
-    // via the API. For now we mark it as accepted.
-  }, [])
+    // If it's a 3D inspection suggestion, select that visualization and bring it into view
+    if (s.action_type === 'open_3d_inspection' && s.action_payload?.viz_id) {
+      setSelectedVizId(s.action_payload.viz_id)
+      setTimeout(() => {
+        viewerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 80)
+    }
+  }, [setSelectedVizId])
+
+  /* ─── 3D Inspection approve / reject ─── */
+  const handleApproveViz = useCallback((vizId: string) => {
+    setInspectionDecision(vizId, 'approved')
+    setSelectedVizId(vizId)
+  }, [setInspectionDecision, setSelectedVizId])
+
+  const handleRejectViz = useCallback((vizId: string) => {
+    setInspectionDecision(vizId, 'rejected')
+  }, [setInspectionDecision])
 
   /* ─── Export handler ─── */
   const handleExport = useCallback(async (endpoint: string) => {
@@ -399,13 +420,14 @@ export default function ImportExport() {
                 Expected Format
               </h4>
               <p style={{ fontSize: '0.7rem', color: 'var(--color-text-muted)', margin: '0 0 8px' }}>
-                CSV columns or JSON objects should include: <code style={{ color: '#0284c7' }}>event_type</code>, <code style={{ color: '#0284c7' }}>severity</code>, <code style={{ color: '#0284c7' }}>description</code>, <code style={{ color: '#0284c7' }}>affected_passengers</code>, <code style={{ color: '#0284c7' }}>estimated_delay_minutes</code>
+                CSV columns or JSON objects should include: <code style={{ color: '#0284c7' }}>event_type</code>, <code style={{ color: '#0284c7' }}>severity</code>, <code style={{ color: '#0284c7' }}>description</code>, <code style={{ color: '#0284c7' }}>affected_passengers</code>, <code style={{ color: '#0284c7' }}>estimated_delay_minutes</code>.
+                Optional 3D fields: <code style={{ color: '#0284c7' }}>chainage_m</code>, <code style={{ color: '#0284c7' }}>defect_type</code>, <code style={{ color: '#0284c7' }}>confidence</code>, <code style={{ color: '#0284c7' }}>sensor_source</code>.
               </p>
               <pre style={{ fontSize: '0.65rem', color: 'var(--color-text-muted)', background: 'var(--color-bg-base)', padding: 10, borderRadius: 6, overflow: 'auto', margin: 0 }}>
-{`event_type,severity,description,affected_passengers,estimated_delay_minutes,priority
-track_defect,critical,Major rail fracture near Howrah junction,2500,120,9
-train_delay,high,Express delayed due to signal failure,800,45,7
-platform_overcrowding,medium,Platform 3 overcrowded during rush hour,1200,10,5`}
+{`event_type,severity,description,affected_passengers,estimated_delay_minutes,priority,chainage_m,defect_type,confidence
+track_defect,critical,Major rail fracture near Howrah junction,2500,120,9,4380,rail_fracture,0.86
+signal_failure,high,Signal failure affecting eastbound,800,45,8,4210,signal_failure,0.78
+platform_overcrowding,medium,Platform 3 overcrowded during rush,1200,10,5,,,`}
               </pre>
             </div>
           </div>
@@ -413,7 +435,7 @@ platform_overcrowding,medium,Platform 3 overcrowded during rush hour,1200,10,5`}
 
         {/* ─── STEP 2: Preview + Suggestions ─── */}
         {step === 'preview' && preview && (
-          <div style={{ maxWidth: 1000, margin: '0 auto' }}>
+          <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             {/* Summary cards */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 12, marginBottom: 20 }}>
               {[
@@ -473,6 +495,20 @@ platform_overcrowding,medium,Platform 3 overcrowded during rush hour,1200,10,5`}
                 ))}
               </div>
             </div>
+
+            {/* 3D Defect Inspection Viewer */}
+            {visualizations.length > 0 && (
+              <div ref={viewerRef} style={{ marginBottom: 20 }}>
+                <ImportedDefectViewer
+                  visualizations={visualizations}
+                  selectedVizId={selectedVizId}
+                  onSelectViz={setSelectedVizId}
+                  inspectionDecisions={inspectionDecisions}
+                  onApprove={handleApproveViz}
+                  onReject={handleRejectViz}
+                />
+              </div>
+            )}
 
             {/* Event preview table */}
             <div className="card" style={{ borderRadius: 12, overflow: 'hidden', marginBottom: 20 }}>
@@ -537,12 +573,19 @@ platform_overcrowding,medium,Platform 3 overcrowded during rush hour,1200,10,5`}
               </div>
             </div>
 
+            {/* Confirm error */}
+            {confirmError && (
+              <div style={{ ...errorBannerStyle, marginBottom: 16 }}>
+                <AlertTriangle size={16} /> {confirmError}
+              </div>
+            )}
+
             {/* Actions */}
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
               <button onClick={() => { reset() }} style={btnSecondaryStyle}>
                 <X size={14} /> Cancel
               </button>
-              <button onClick={handleConfirm} disabled={importing || preview.has_errors} style={btnPrimaryStyle}>
+              <button onClick={handleConfirm} disabled={importing} style={btnPrimaryStyle}>
                 {importing ? (
                   <RefreshCw size={14} style={{ animation: 'spin 0.8s linear infinite' }} />
                 ) : (

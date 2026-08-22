@@ -1,31 +1,31 @@
-event_type,severity,priority,status,description,station_id,track_id,train_id,affected_passengers,estimated_delay_minutes
-track_defect,critical,9,open,Major rail fracture detected near Howrah junction on Track 3,1,3,2,2500,120
-signal_failure,high,8,in_progress,Signal post S-42 malfunctioning at Sealdah approach,2,5,4,1200,65
-ohe_failure,high,7,open,Overhead equipment wire snapped between Malda and New Jalpaiguri,3,8,,800,90
-bridge_risk,critical,10,open,Structural cracks observed on Bogibéal bridge over Brahmaputra,4,12,,5000,180
-train_delay,high,7,in_progress,Howrah-Ranchi Express delayed due to point failure at Kharagpur,5,,6,1400,45
-congestion,medium,5,open,Heavy congestion on Howrah-Delhi mainline near Mughalsarai,6,15,,0,30
-platform_overcrowding,medium,5,open,Platform 4 at Sealdah severely overcrowded during evening rush,7,,,3200,0
-fire,high,9,open,Small fire reported in sleeper coach S7 of Taj Express,8,,9,200,60
-flood,critical,10,open,Flood waters submerging track near Malda Town station,9,18,,0,240
-emergency_incident,critical,10,open,Passenger medical emergency on board Rajdhani Express near Dhanbad,10,,11,30,40
-trespassing,low,3,resolved,Trespasser spotted near level crossing at Asansol,11,22,,0,10
-level_crossing_violation,medium,5,open,Unmanned level crossing barrier damaged by truck at Burdwan,12,25,,0,25
-maintenance_alert,low,4,in_progress,Scheduled track maintenance on loop line at Kharagpur yard,13,30,,0,15
-track_defect,high,8,open,Weld crack detected on rail near Patna Junction,14,35,15,1800,55
-signal_failure,critical,9,open,Complete signal failure at Howrah station affecting 12 platforms,2,,18,4500,90
-train_delay,medium,6,in_progress,Shatabdi Express running 35 minutes behind schedule due to fog,15,,20,900,35
-congestion,high,7,open,Extreme congestion on suburban section between Park Circus and Ballygunge,7,,22,2800,20
-bridge_risk,high,8,open,Foundation erosion reported near Farakka barrage bridge,16,40,,0,120
-ohe_failure,medium,6,open,Partial OHE failure between Durgapur and Andal,17,42,,0,45
-platform_overcrowding,critical,9,open,Dangerous overcrowding at Howrah platform 1 during Durga Puja festival,1,,,8000,0
-maintenance_alert,low,3,resolved,Points maintenance completed at Sealdah south section,7,45,,0,0
-fire,medium,7,in_progress,Minor electrical fire in AC coach of Duronto Express extinguished,18,,28,400,25
-flood,high,9,open,Rising water levels threatening track integrity near Nagaland,19,50,,0,150
-trespassing,medium,4,open,Group of pedestrians crossing tracks near Rajmahal,20,52,,0,15
-emergency_incident,high,8,open,Derailment of goods train near Khana Junction blocking main line,21,55,,0,120
-track_defect,medium,6,in_progress,Rail wear exceeding limits on curve near Jamshedpur,22,58,32,1500,30
-signal_failure,medium,5,open,Intermittent signal flickering at Naihati junction,23,60,,0,20
-train_delay,low,4,resolved,Passenger train 53012 arrived 15 minutes late due to fog,24,,35,300,15
-congestion,low,3,open,Minor crowding at Danapur platform during festival season,25,,38,600,5
-level_crossing_violation,high,7,open,Speeding truck damaged crossing gate at Jamalpur crossing,26,65,,0,60
+event_type,severity,priority,status,description,station_id,train_id,affected_passengers,estimated_delay_minutes
+track_defect,critical,9,open,Major rail fracture detected near Howrah junction on Track 3,3,2,2500,120
+signal_failure,high,8,in_progress,Signal post S-42 malfunctioning at New Delhi approach,2,4,1200,65
+ohe_failure,high,7,open,Overhead equipment wire snapped between Secunderabad and Hyderabad,6,,800,90
+bridge_risk,critical,10,open,Structural cracks observed on bridge near Chennai Central,4,,5000,180
+train_delay,high,7,in_progress,Mumbai-Delhi Rajdhani delayed due to point failure at Kanpur,10,6,1400,45
+congestion,medium,5,open,Heavy congestion on Howrah-Delhi mainline near Patna,11,,0,30
+platform_overcrowding,medium,5,open,Platform 3 at Mumbai CST severely overcrowded during evening rush,1,,,3200,0
+fire,high,9,open,Small fire reported in sleeper coach S7 of Shatabdi Express,2,9,200,60
+flood,critical,10,open,Flood waters submerging track near Vijayawada station,14,,0,240
+emergency_incident,critical,10,open,Passenger medical emergency on board Rajdhani near Bhopal,12,11,30,40
+trespassing,low,3,resolved,Trespasser spotted near level crossing at Ahmedabad,7,,0,10
+level_crossing_violation,medium,5,open,Unmanned level crossing barrier damaged by truck at Jaipur,9,,0,25
+maintenance_alert,low,4,in_progress,Scheduled track maintenance on loop line at Lucknow yard,10,,0,15
+track_defect,high,8,open,Weld crack detected on rail near Patna Junction,11,15,1800,55
+signal_failure,critical,9,open,Complete signal failure at Howrah station affecting 12 platforms,3,18,4500,90
+train_delay,medium,6,in_progress,Shatabdi Express running 35 minutes behind schedule due to fog,5,20,900,35
+congestion,high,7,open,Extreme congestion on suburban section near Pune,8,22,2800,20
+bridge_risk,high,8,open,Foundation erosion reported near bridge at Nagpur,13,,0,120
+ohe_failure,medium,6,open,Partial OHE failure between Bhopal and Nagpur,12,,0,45
+platform_overcrowding,critical,9,open,Dangerous overcrowding at New Delhi platform 1 during festival,2,,,8000,0
+maintenance_alert,low,3,resolved,Points maintenance completed at Secunderabad south section,6,,0,0
+fire,medium,7,in_progress,Minor electrical fire in AC coach of Duronto Express extinguished,1,3,400,25
+flood,high,9,open,Rising water levels threatening track integrity near Vijayawada,14,,0,150
+trespassing,medium,4,open,Group of pedestrians crossing tracks near Kanpur,10,,0,15
+emergency_incident,high,8,open,Derailment of goods train near Lucknow blocking main line,10,,0,120
+track_defect,medium,6,in_progress,Rail wear exceeding limits on curve near Chennai,4,13,1500,30
+signal_failure,medium,5,open,Intermittent signal flickering at Bengaluru City junction,5,,0,20
+train_delay,low,4,resolved,Passenger train 53012 arrived 15 minutes late due to fog,3,17,300,15
+congestion,low,3,open,Minor crowding at Bhopal Junction platform during festival season,12,,600,5
+level_crossing_violation,high,7,open,Speeding truck damaged crossing gate at Jaipur crossing,9,,0,60

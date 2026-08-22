@@ -3,6 +3,7 @@ import csv
 import io
 import json
 import logging
+import zlib
 from typing import List, Dict, Any, Optional, Tuple
 from datetime import datetime
 
@@ -44,18 +45,46 @@ def _parse_json(file_content: str) -> Any:
 
 def _normalize_event(raw: Dict[str, Any], index: int) -> Dict[str, Any]:
     """Normalize raw event data into our event schema."""
+    if not isinstance(raw, dict):
+        raise ValueError(f"Row {index}: Each record must be a JSON object or CSV row.")
+
+    # Parse optional 3D / inspection fields safely
+    asset_id = _safe_str(raw.get('asset_id'))
+    asset_type = _safe_str(raw.get('asset_type'))
+    chainage_m = _safe_float(raw.get('chainage_m'))
+    latitude = _safe_float(raw.get('latitude'))
+    longitude = _safe_float(raw.get('longitude'))
+    defect_type = _safe_str(raw.get('defect_type'))
+    confidence = _safe_float(raw.get('confidence'))
+    sensor_source = _safe_str(raw.get('sensor_source'))
+    inspection_timestamp = _safe_str(raw.get('inspection_timestamp'))
+    evidence = raw.get('evidence')
+    if evidence and not isinstance(evidence, dict):
+        evidence = {'raw': str(evidence)}
+
     return {
-        'event_type': (raw.get('event_type') or raw.get('type') or 'maintenance_alert').strip().lower().replace(' ', '_'),
-        'severity': (raw.get('severity') or 'medium').strip().lower(),
-        'priority': int(raw.get('priority', 5)),
-        'status': (raw.get('status') or 'open').strip().lower(),
-        'description': raw.get('description', ''),
+        'event_type': (_safe_str(raw.get('event_type') or raw.get('type')) or 'maintenance_alert').lower().replace(' ', '_'),
+        'severity': (_safe_str(raw.get('severity')) or 'medium').lower(),
+        'priority': _safe_int(raw.get('priority')) or 5,
+        'status': (_safe_str(raw.get('status')) or 'open').lower(),
+        'description': _safe_str(raw.get('description')) or '',
         'station_id': _safe_int(raw.get('station_id')),
         'track_id': _safe_int(raw.get('track_id')),
         'train_id': _safe_int(raw.get('train_id')),
-        'affected_passengers': int(raw.get('affected_passengers', 0) or 0),
-        'estimated_delay_minutes': int(raw.get('estimated_delay_minutes', 0) or 0),
+        'affected_passengers': _safe_int(raw.get('affected_passengers')) or 0,
+        'estimated_delay_minutes': _safe_int(raw.get('estimated_delay_minutes')) or 0,
         'event_metadata': {},
+        # 3D inspection fields (all optional, backward-compatible)
+        'asset_id': asset_id,
+        'asset_type': asset_type,
+        'chainage_m': chainage_m,
+        'latitude': latitude,
+        'longitude': longitude,
+        'defect_type': defect_type,
+        'confidence': confidence,
+        'sensor_source': sensor_source,
+        'inspection_timestamp': inspection_timestamp,
+        'evidence': evidence or {},
         '_row_index': index,
     }
 
@@ -67,6 +96,148 @@ def _safe_int(val) -> Optional[int]:
         return int(val)
     except (ValueError, TypeError):
         return None
+
+
+def _safe_str(val) -> Optional[str]:
+    """Safely convert a value to string, returning None for empty/missing."""
+    if val is None:
+        return None
+    s = str(val).strip()
+    return s if s else None
+
+
+def _safe_float(val) -> Optional[float]:
+    """Safely convert a value to float, returning None for empty/missing."""
+    if val is None or val == '':
+        return None
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return None
+
+
+# Asset types that are visualizable in the 3D viewer
+VISUALIZABLE_ASSET_TYPES = {
+    'track', 'signal', 'train', 'platform', 'ohe', 'bridge',
+}
+
+# Mapping of event types to probable asset types for auto-detection
+_EVENT_TYPE_TO_ASSET_TYPE = {
+    'track_defect': 'track',
+    'signal_failure': 'signal',
+    'ohe_failure': 'ohe',
+    'bridge_risk': 'bridge',
+    'train_delay': 'train',
+    'congestion': 'platform',
+    'platform_overcrowding': 'platform',
+}
+
+# Severity color mapping for 3D markers
+SEVERITY_MARKER_COLOR = {
+    'critical': '#ef4444',
+    'high': '#f59e0b',
+    'medium': '#3b82f6',
+    'low': '#6b7280',
+}
+
+
+def _derive_asset_type(event: Dict[str, Any]) -> Optional[str]:
+    """Derive asset type from explicit field or event type."""
+    explicit = event.get('asset_type')
+    if explicit and explicit.lower() in VISUALIZABLE_ASSET_TYPES:
+        return explicit.lower()
+    return _EVENT_TYPE_TO_ASSET_TYPE.get(event.get('event_type'))
+
+
+def _derive_asset_id(event: Dict[str, Any]) -> str:
+    """Derive an asset ID string from explicit field or composite key."""
+    if event.get('asset_id'):
+        return event['asset_id']
+    asset_type = _derive_asset_type(event) or 'asset'
+    prefix_map = {'track': 'TRK', 'signal': 'SIG', 'train': 'TRN', 'platform': 'PLT', 'ohe': 'OHE', 'bridge': 'BRG'}
+    prefix = prefix_map.get(asset_type, 'AST')
+    # Use a deterministic suffix from track_id or station_id
+    suffix = event.get('track_id') or event.get('station_id') or event.get('train_id') or 0
+    return f"{prefix}-{suffix}"
+
+
+def build_visualization_payload(event: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Generate a 3D visualization payload for a visualizable event.
+
+    Returns None if the event cannot be visualized (no asset type detected).
+    Uses chainage_m for a demo 3D position when GIS coordinates are unavailable.
+    """
+    asset_type = _derive_asset_type(event)
+    if not asset_type:
+        return None
+
+    asset_id = _derive_asset_id(event)
+    severity = event.get('severity', 'medium')
+    defect_type = event.get('defect_type') or event.get('event_type', 'unknown')
+    confidence = event.get('confidence') or 0.5
+    description = event.get('description', '')
+    chainage_m = event.get('chainage_m')
+    latitude = event.get('latitude')
+    longitude = event.get('longitude')
+    sensor_source = event.get('sensor_source') or 'unknown'
+
+    # --- Deterministic 3D position ---
+    # If lat/lon are provided, convert to a simple local x/z; otherwise use chainage.
+    position_accuracy = 'precise'
+    if latitude is not None and longitude is not None:
+        # Simple projection: scale lon to x, lat to z (demo only)
+        x = round((longitude - 80.0) * 10, 2)  # offset from ~central India
+        y = 0.25  # slightly above ground
+        z = round((latitude - 22.0) * 10, 2)
+    elif chainage_m is not None:
+        # Use chainage as x-axis distance along a demo track
+        x = round(chainage_m / 1000.0, 2)  # scale: 1 unit = 1 km
+        y = 0.25
+        z = 0.0
+        position_accuracy = 'estimated'
+    else:
+        # Stable fallback based on asset_id checksum (crc32 is deterministic
+        # across processes, unlike builtin hash() which is randomized)
+        h = zlib.crc32(asset_id.encode('utf-8')) % 100
+        x = round(h / 10.0, 2)
+        y = 0.25
+        z = round((h % 10) / 5.0, 2)
+        position_accuracy = 'estimated'
+
+    # --- Defect label ---
+    label = f"Probable {defect_type.replace('_', ' ')}"
+
+    # --- Build evidence block ---
+    evidence = {
+        'description': description,
+        'sensor_source': sensor_source,
+        'position_accuracy': position_accuracy,
+    }
+    if chainage_m is not None:
+        evidence['chainage_m'] = chainage_m
+    if latitude is not None:
+        evidence['latitude'] = latitude
+    if longitude is not None:
+        evidence['longitude'] = longitude
+    # Merge any explicit evidence dict from the event
+    if event.get('evidence') and isinstance(event['evidence'], dict):
+        evidence.update(event['evidence'])
+
+    viz_id = f"viz_{asset_id}_{event.get('_row_index', 0)}"
+
+    return {
+        'viz_id': viz_id,
+        'asset_type': asset_type,
+        'asset_id': asset_id,
+        'defect': {
+            'type': defect_type,
+            'position': {'x': x, 'y': y, 'z': z},
+            'confidence': confidence,
+            'severity': severity,
+            'label': label,
+        },
+        'evidence': evidence,
+    }
 
 
 def _validate_event(event: Dict[str, Any]) -> List[str]:
@@ -126,6 +297,13 @@ def parse_upload(file_content: str, filename: str) -> Dict[str, Any]:
         total_passengers += e['affected_passengers']
         total_delay += e['estimated_delay_minutes']
 
+    # --- Build 3D visualization payloads for visualizable events ---
+    visualizations = []
+    for e in events:
+        viz = build_visualization_payload(e)
+        if viz:
+            visualizations.append(viz)
+
     return {
         'filename': filename,
         'total_records': len(events),
@@ -133,6 +311,7 @@ def parse_upload(file_content: str, filename: str) -> Dict[str, Any]:
         'errors': all_errors,
         'has_errors': len(all_errors) > 0,
         'events': events,
+        'visualizations': visualizations,
         'summary': {
             'by_severity': severity_counts,
             'by_type': type_counts,
@@ -142,22 +321,45 @@ def parse_upload(file_content: str, filename: str) -> Dict[str, Any]:
     }
 
 
+def _resolve_fk(model, record_id: Optional[int]):
+    """Return record_id if it exists in the DB, else None."""
+    if record_id is None:
+        return None
+    try:
+        if db.session.get(model, record_id) is not None:
+            return record_id
+        return None
+    except Exception:
+        return None
+
+
 def confirm_import(events: List[Dict[str, Any]], trigger_agents: bool = True) -> Dict[str, Any]:
-    """Persist validated events to DB and optionally trigger agent pipeline."""
+    """Persist validated events to DB and optionally trigger agent pipeline.
+
+    Uses savepoints (begin_nested) so a single event failure doesn't roll back
+    previously flushed events.
+    """
     created = []
     errors = []
 
     for event_data in events:
+        # Use a savepoint so one bad event doesn't destroy previous work
+        savepoint = db.session.begin_nested()
         try:
+            # Validate FK references — set to None if the referenced row doesn't exist
+            station_id = _resolve_fk(Station, event_data.get('station_id'))
+            track_id = _resolve_fk(Track, event_data.get('track_id'))
+            train_id = _resolve_fk(Train, event_data.get('train_id'))
+
             event = Event(
                 event_type=event_data['event_type'],
                 severity=event_data['severity'],
                 priority=event_data['priority'],
                 status=event_data['status'],
                 description=event_data.get('description', ''),
-                station_id=event_data.get('station_id'),
-                track_id=event_data.get('track_id'),
-                train_id=event_data.get('train_id'),
+                station_id=station_id,
+                track_id=track_id,
+                train_id=train_id,
                 affected_passengers=event_data.get('affected_passengers', 0),
                 estimated_delay_minutes=event_data.get('estimated_delay_minutes', 0),
                 event_metadata=event_data.get('event_metadata', {}),
@@ -165,13 +367,24 @@ def confirm_import(events: List[Dict[str, Any]], trigger_agents: bool = True) ->
             db.session.add(event)
             db.session.flush()  # get the ID
             created.append(event)
+            savepoint.commit()  # release the savepoint on success
         except Exception as e:
+            savepoint.rollback()  # only rolls back this one event
             errors.append(f"Failed to create event: {e}")
 
-    db.session.commit()
+    # Commit all successfully flushed events
+    try:
+        if created:
+            db.session.commit()
+        else:
+            db.session.rollback()
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Database commit failed during import: {e}")
+        errors.insert(0, f"Database error during import: {str(e)}")
 
     # Optionally trigger agent pipeline for each imported event
-    if trigger_agents:
+    if trigger_agents and created:
         try:
             from app.services.event_service import EventService
             from flask import current_app
@@ -192,6 +405,7 @@ def confirm_import(events: List[Dict[str, Any]], trigger_agents: bool = True) ->
 def generate_next_step_suggestions(
     preview_summary: Dict[str, Any],
     import_result: Dict[str, Any],
+    visualizations: Optional[List[Dict[str, Any]]] = None,
 ) -> List[Dict[str, Any]]:
     """Generate AI-powered next step suggestions based on imported data.
 
@@ -352,6 +566,30 @@ def generate_next_step_suggestions(
             'action_payload': {'route': '/map'},
             'auto_triggered': False,
         })
+
+    # --- 3D inspection for visualizable defects ---
+    if visualizations:
+        for viz in visualizations:
+            suggestions.append({
+                'id': f"open_3d_inspection_{viz['viz_id']}",
+                'title': f"Open 3D Inspection: {viz['defect']['label']}",
+                'description': (
+                    f"Inspect the probable {viz['defect']['type'].replace('_', ' ')} "
+                    f"on {viz['asset_id']} in 3D. "
+                    f"Confidence: {round(viz['defect']['confidence'] * 100)}%. "
+                    f"Evidence sourced from {viz['evidence'].get('sensor_source', 'unknown')}."
+                ),
+                'category': 'review',
+                'confidence': round(viz['defect']['confidence'], 2),
+                'action_type': 'open_3d_inspection',
+                'action_payload': {
+                    'viz_id': viz['viz_id'],
+                    'asset_id': viz['asset_id'],
+                    'asset_type': viz['asset_type'],
+                    'confidence': viz['defect']['confidence'],
+                },
+                'auto_triggered': False,
+            })
 
     # Sort by confidence descending
     suggestions.sort(key=lambda s: s['confidence'], reverse=True)
