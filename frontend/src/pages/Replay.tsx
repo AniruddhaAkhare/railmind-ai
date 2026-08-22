@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import {
   Play, Pause, SkipBack, SkipForward,
-  RefreshCw, FastForward, Rewind,
+  RefreshCw, FastForward, Rewind, Download
 } from 'lucide-react'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 import { api } from '../config/api'
 import { useEventStore, RailEvent } from '../stores/useEventStore'
 
@@ -200,6 +202,45 @@ export default function Replay() {
     ? (session.currentIndex / (session.messages.length - 1)) * 100
     : 0
 
+  const exportToPDF = () => {
+    if (!session || !session.messages.length) return
+
+    const doc = new jsPDF()
+    
+    // Header
+    doc.setFontSize(16)
+    doc.text(`Incident Replay Report - Incident #${session.event?.id || 'Unknown'}`, 14, 20)
+    
+    doc.setFontSize(12)
+    doc.text(`Event Type: ${session.event?.event_type?.replace(/_/g, ' ') || 'N/A'}`, 14, 30)
+    doc.text(`Severity: ${session.event?.severity || 'N/A'}`, 14, 38)
+    
+    doc.setFontSize(14)
+    doc.text('Agent Response Timeline & Context', 14, 50)
+
+    const tableData = session.messages.map((msg, index) => [
+      index + 1,
+      `Agent #${msg.agent_id}\n(${msg.message_type})`,
+      new Date(msg.created_at).toLocaleString('en-IN'),
+      `${Math.round(msg.confidence * 100)}%`,
+      msg.content,
+      msg.metadata ? JSON.stringify(msg.metadata, null, 2) : 'N/A'
+    ])
+
+    autoTable(doc, {
+      startY: 55,
+      head: [['#', 'Agent & Type', 'Time', 'Confidence', 'Reasoning Output', 'Extracted Logic']],
+      body: tableData,
+      styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+      columnStyles: {
+        4: { cellWidth: 70 },
+        5: { cellWidth: 40 }
+      }
+    })
+
+    doc.save(`incident_${session.event?.id || 'export'}_replay.pdf`)
+  }
+
   return (
     <div className="animate-fade-in">
       <div className="page-header">
@@ -315,18 +356,49 @@ export default function Replay() {
                 {/* Playback Controls */}
                 <div className="card" style={{ marginBottom: 16 }}>
                   {session.event && (
-                    <div style={{ marginBottom: 16 }}>
-                      <div style={{
-                        fontSize: '1rem',
-                        fontWeight: 600,
-                        color: 'var(--color-text-primary)',
-                        marginBottom: 4,
-                      }}>
-                        {session.event.event_type?.replace(/_/g, ' ')} — Incident #{session.event.id}
+                    <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <div style={{
+                          fontSize: '1rem',
+                          fontWeight: 600,
+                          color: 'var(--color-text-primary)',
+                          marginBottom: 4,
+                        }}>
+                          {session.event.event_type?.replace(/_/g, ' ')} — Incident #{session.event.id}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
+                          {session.messages.length} agent messages recorded
+                        </div>
                       </div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>
-                        {session.messages.length} agent messages recorded
-                      </div>
+                      <button
+                        onClick={exportToPDF}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          padding: '6px 12px',
+                          background: 'var(--color-bg-elevated)',
+                          border: '1px solid var(--color-border)',
+                          borderRadius: 'var(--radius-sm)',
+                          cursor: 'pointer',
+                          color: 'var(--color-text-primary)',
+                          fontSize: '0.875rem',
+                          fontWeight: 500,
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseOver={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-primary)';
+                          e.currentTarget.style.color = 'var(--color-primary)';
+                        }}
+                        onMouseOut={(e) => {
+                          e.currentTarget.style.borderColor = 'var(--color-border)';
+                          e.currentTarget.style.color = 'var(--color-text-primary)';
+                        }}
+                        title="Export Agent Response Timeline & Context as PDF"
+                      >
+                        <Download size={16} />
+                        Export PDF
+                      </button>
                     </div>
                   )}
 

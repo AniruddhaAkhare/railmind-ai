@@ -1,6 +1,7 @@
 import os
 import sys
 
+
 # Force UTF-8 output so emoji log messages don't crash on Windows CP1252 terminals
 if sys.stdout.encoding != 'utf-8':
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
