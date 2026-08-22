@@ -19,7 +19,9 @@ def create_app(config=None):
 
     setup_logger(app)
     db.init_app(app)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, origins=["*"], supports_credentials=True,
+         allow_headers=["Content-Type", "Authorization", "X-Requested-With"],
+         methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"])
     socketio.init_app(app)
 
     with app.app_context():
@@ -131,6 +133,7 @@ def register_blueprints(app):
     from app.api.routes.agents import agents_bp
     from app.api.routes.digital_twin import digital_twin_bp
     from app.api.routes.sensors import sensors_bp
+    from app.api.routes.imports import imports_bp
 
     blueprints = [
         (events_bp, '/events'),
@@ -141,6 +144,7 @@ def register_blueprints(app):
         (agents_bp, '/agents'),
         (digital_twin_bp, '/digital-twin'),
         (sensors_bp, '/sensors'),
+        (imports_bp, '/imports'),
     ]
 
     for bp, url_prefix in blueprints:

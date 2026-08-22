@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Shield,
   Presentation,
+  Upload,
 } from 'lucide-react'
 import { useWebSocket } from '../hooks/useWebSocket'
 
@@ -38,6 +39,12 @@ const navGroups = [
       { to: '/digital-twin',icon: Cpu,             label: 'Digital Twin' },
       { to: '/replay',      icon: Play,            label: 'Incident Replay' },
       { to: '/story',       icon: Presentation,    label: 'Executive Story', badge: 'EXEC' },
+    ],
+  },
+  {
+    section: 'Data',
+    items: [
+      { to: '/import-export',icon: Upload,          label: 'Import / Export' },
     ],
   },
 ]

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Socket } from 'socket.io-client'
 import { io } from 'socket.io-client'
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000'
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || ''
 
 export function useWebSocket(namespace: string = '') {
   const [connected, setConnected] = useState(false)

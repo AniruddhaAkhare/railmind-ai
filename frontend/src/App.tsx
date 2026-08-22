@@ -8,6 +8,7 @@ import DigitalTwin from './pages/DigitalTwin'
 import Replay from './pages/Replay'
 import AgentNetworkPage from './pages/AgentNetworkPage'
 import ExecutiveStoryPage from './pages/ExecutiveStoryPage'
+import ImportExport from './pages/ImportExport'
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/digital-twin" element={<DigitalTwin />} />
           <Route path="/replay"       element={<Replay />} />
           <Route path="/story"        element={<ExecutiveStoryPage />} />
+          <Route path="/import-export" element={<ImportExport />} />
           <Route path="*"             element={<Dashboard />} />
         </Routes>
       </MainLayout>
