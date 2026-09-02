@@ -200,6 +200,8 @@ class Route(db.Model):
         return {
             'id': self.id,
             'name': self.name,
+            'source_station_id': self.source_station_id,
+            'destination_station_id': self.destination_station_id,
             'distance_km': self.distance_km,
             'estimated_time_hours': self.estimated_time_hours,
             'status': self.status,
@@ -288,6 +290,7 @@ class Event(db.Model):
             'train_id': self.train_id,
             'affected_passengers': self.affected_passengers,
             'estimated_delay_minutes': self.estimated_delay_minutes,
+            'event_metadata': self.event_metadata or {},
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
             'resolved_at': self.resolved_at.isoformat() if self.resolved_at else None,

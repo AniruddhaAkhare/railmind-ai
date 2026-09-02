@@ -27,6 +27,45 @@ def list_trains():
     }), 200
 
 
+@trains_bp.route('/live', methods=['GET'])
+def get_live_trains():
+    """Return all currently tracked live trains from RailRadar (or fallback)."""
+    from app.services.live_rail_manager import live_rail_manager
+    trains = live_rail_manager.get_live_trains()
+    mode = live_rail_manager.get_mode()
+    return jsonify({
+        'trains': trains,
+        'mode': mode,
+        'count': len(trains)
+    }), 200
+
+
+@trains_bp.route('/<train_number>/live', methods=['GET'])
+def get_live_train_by_number(train_number):
+    """Return live status and optional route geometry for a specific train number."""
+    from app.services.live_rail_manager import live_rail_manager
+    include_route = request.args.get('route', 'false').lower() == 'true'
+    
+    live_train = live_rail_manager.poll_train_now(train_number)
+    route_data = None
+    if include_route:
+        route_data = live_rail_manager.fetch_route(train_number)
+        
+    if not live_train:
+        # Fallback search in cached live trains
+        cached = [t for t in live_rail_manager.get_live_trains() if t.get('train_number') == str(train_number)]
+        if cached:
+            live_train = cached[0]
+            
+    if not live_train:
+        return jsonify({'error': f'Live data for train {train_number} unavailable', 'mode': live_rail_manager.get_mode()}), 404
+        
+    response = dict(live_train)
+    if route_data:
+        response['route_geometry'] = route_data
+    return jsonify(response), 200
+
+
 @trains_bp.route('/<int:train_id>', methods=['GET'])
 def get_train(train_id):
     """Get a single train by ID."""

@@ -2,13 +2,22 @@ import os
 from datetime import timedelta
 
 
+def _get_database_url() -> str:
+    """Retrieve and sanitize DATABASE_URL for SQLAlchemy 2.0 / PostgreSQL / SQLite."""
+    raw_url = os.getenv('DATABASE_URL', 'sqlite:///railmind.db')
+    if raw_url.startswith('postgres://'):
+        return raw_url.replace('postgres://', 'postgresql://', 1)
+    return raw_url
+
+
 def _build_engine_options(db_url: str) -> dict:
     """Build SQLAlchemy engine options — SQLite doesn't support pool_size."""
     if db_url.startswith('sqlite'):
         return {'pool_pre_ping': True}
     return {
-        'pool_size': 20,
-        'pool_recycle': 3600,
+        'pool_size': 10,
+        'max_overflow': 20,
+        'pool_recycle': 1800,
         'pool_pre_ping': True,
     }
 
@@ -19,16 +28,11 @@ class Config:
     DEBUG = False
     TESTING = False
 
-    # Database — defaults to SQLite for zero-config local dev
-    SQLALCHEMY_DATABASE_URI = os.getenv(
-        'DATABASE_URL',
-        'sqlite:///railmind.db'
-    )
+    # Database — defaults to SQLite for zero-config local dev, supports PostgreSQL on Render
+    SQLALCHEMY_DATABASE_URI = _get_database_url()
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ECHO = os.getenv('SQLALCHEMY_ECHO', 'False') == 'True'
-    SQLALCHEMY_ENGINE_OPTIONS = _build_engine_options(
-        os.getenv('DATABASE_URL', 'sqlite:///railmind.db')
-    )
+    SQLALCHEMY_ENGINE_OPTIONS = _build_engine_options(_get_database_url())
 
     # Redis
     REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')

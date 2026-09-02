@@ -79,7 +79,12 @@ class BaseAgent:
         return severity_actions.get(event.severity, f'Event {event.event_type} acknowledged by {self.name}.')
 
     def _build_event_context(self, event, prior_analyses: list = None) -> str:
-        """Build a context string describing the event for LLM prompts."""
+        """Build a context string describing the event for LLM prompts.
+
+        Appends a Live Railway Context section when spatial enrichment data
+        is available in event.event_metadata.  All existing fields are
+        unchanged — the live section is purely additive.
+        """
         ctx = (
             f"Event ID: {event.id}\n"
             f"Type: {event.event_type}\n"
@@ -90,6 +95,47 @@ class BaseAgent:
             f"Estimated delay: {event.estimated_delay_minutes} minutes\n"
             f"Created at: {event.created_at.isoformat() if event.created_at else 'N/A'}\n"
         )
+
+        # ── Live Railway Context (additive — only present when enriched) ──────
+        try:
+            meta = event.event_metadata or {}
+            affected_trains = meta.get("affected_trains")
+            nearest_stn = meta.get("nearest_station")
+            event_lat = meta.get("event_lat")
+            event_lon = meta.get("event_lon")
+            radius_km = meta.get("event_radius_km", 25)
+
+            if event_lat and event_lon:
+                ctx += (
+                    f"\n--- Live Railway Context ---\n"
+                    f"Event location: {event_lat:.4f}°N, {event_lon:.4f}°E\n"
+                    f"Spatial search radius: {radius_km} km\n"
+                )
+
+            if nearest_stn:
+                ctx += (
+                    f"Nearest station: {nearest_stn.get('name', 'Unknown')} "
+                    f"({nearest_stn.get('code', '?')}) — "
+                    f"{nearest_stn.get('distance_km', '?')} km away\n"
+                )
+
+            if affected_trains:
+                ctx += f"Trains within {radius_km} km ({len(affected_trains)} found):\n"
+                for t in affected_trains[:5]:  # cap at 5 to keep prompt compact
+                    source_tag = "[LIVE]" if t.get("source") == "live" else "[SIM]"
+                    stale_tag = " (stale)" if t.get("stale") else ""
+                    ctx += (
+                        f"  {source_tag}{stale_tag} Train {t.get('train_number')} "
+                        f"({t.get('train_name', 'Unknown')}) — "
+                        f"{t.get('distance_km')} km away, "
+                        f"speed: {t.get('current_speed', '?')} km/h, "
+                        f"delay: {t.get('delay_minutes', 0)} min\n"
+                    )
+            elif affected_trains is not None:
+                ctx += f"No trains found within {radius_km} km of this event.\n"
+        except Exception:
+            pass  # live context is always optional — never break the pipeline
+
         if prior_analyses:
             ctx += "\n--- Prior Agent Analyses ---\n"
             for analysis in prior_analyses[-3:]:  # last 3 to keep context short

@@ -19,9 +19,17 @@ import logging
 from datetime import datetime
 
 # ─── Config ─────────────────────────────────────────────────────────────────
-API_BASE = "http://localhost:5000/api"
-STREAM_INTERVAL = 5   # seconds between sensor pulses
-LOG_LEVEL = logging.INFO
+def get_api_base() -> str:
+    """Dynamically get the API base URL depending on PORT or env var."""
+    if os.getenv("API_BASE"):
+        return os.getenv("API_BASE").rstrip("/")
+    if os.getenv("INTERNAL_API_URL"):
+        return os.getenv("INTERNAL_API_URL").rstrip("/")
+    port = os.getenv("PORT", "5000")
+    return f"http://127.0.0.1:{port}/api"
+
+STREAM_INTERVAL = int(os.getenv("STREAM_INTERVAL", "5"))   # seconds between sensor pulses
+LOG_LEVEL = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper(), logging.INFO)
 
 logging.basicConfig(
     level=LOG_LEVEL,
@@ -280,25 +288,36 @@ def _maybe_create_event(sensor_data: dict) -> bool:
             "estimated_delay_minutes": delay,
             "event_metadata": {"sensor_triggered": True, "raw": sensor_data},
         }
+        api_base = get_api_base()
         try:
-            r = requests.post(f"{API_BASE}/events", json=payload, timeout=5)
+            r = requests.post(f"{api_base}/events", json=payload, timeout=5)
             if r.status_code in (200, 201):
                 logger.info(f"  --> AUTO EVENT: {rule['event_type']} ({severity}) at {sensor_data.get('station_name')}")
                 return True
         except Exception as e:
-            logger.warning(f"  --> Failed to create event: {e}")
+            logger.debug(f"  --> Failed to create event: {e}")
     return False
 
 
 # ─── Main loop ───────────────────────────────────────────────────────────────
 def run():
-    logger.info("RailMind Sensor Stream started. Emitting every 5 seconds...")
-    logger.info(f"Target API: {API_BASE}")
+    # Check feature flag
+    if os.getenv('ENABLE_SYNTHETIC_DATA', 'True').lower() == 'false':
+        logger.info("Synthetic sensor streaming is disabled via ENABLE_SYNTHETIC_DATA=False.")
+        return
+
+    # Wait for the web server to finish binding before sending telemetry pulses
+    time.sleep(3)
+
+    api_base = get_api_base()
+    logger.info(f"RailMind Sensor Stream started. Emitting every {STREAM_INTERVAL} seconds...")
+    logger.info(f"Target API: {api_base}")
 
     tick = 0
     while True:
         tick += 1
         ts = datetime.utcnow().isoformat()
+        api_base = get_api_base()
         logger.info(f"--- Tick {tick} [{datetime.now().strftime('%H:%M:%S')}] ---")
 
         # Pick random stations for this tick
@@ -322,7 +341,7 @@ def run():
 
             # Post weather data
             try:
-                requests.post(f"{API_BASE}/sensors/weather", json={
+                requests.post(f"{api_base}/sensors/weather", json={
                     "station_id": station["id"],
                     "station_name": station["name"],
                     "timestamp": ts,
@@ -337,13 +356,13 @@ def run():
             pos = _get_train_position(train, from_s, to_s)
             pos["timestamp"] = ts
             try:
-                requests.post(f"{API_BASE}/sensors/train_position", json=pos, timeout=3)
+                requests.post(f"{api_base}/sensors/train_position", json=pos, timeout=3)
             except Exception:
                 pass
 
         # Post bulk sensor readings
         try:
-            requests.post(f"{API_BASE}/sensors/bulk", json={
+            requests.post(f"{api_base}/sensors/bulk", json={
                 "readings": all_sensor_data,
                 "timestamp": ts,
             }, timeout=5)

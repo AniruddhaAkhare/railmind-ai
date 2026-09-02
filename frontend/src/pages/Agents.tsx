@@ -116,7 +116,7 @@ function MessageFeed({ messages }: { messages: AgentMessage[] }) {
 }
 
 export default function Agents() {
-  const { agents, messages, loading, error, setAgents, addMessage, setLoading, setError } =
+  const { agents, messages, loading, error, setAgents, addMessage, setLoading, setError, updateAgentStatus } =
     useAgentStore()
 
   const fetchAgents = useCallback(async () => {

@@ -19,7 +19,7 @@ def create_app(config=None):
 
     setup_logger(app)
     db.init_app(app)
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/*": {"origins": "*"}})
     socketio.init_app(app)
 
     with app.app_context():
@@ -34,28 +34,32 @@ def create_app(config=None):
                 AgentExecutionTrace, AgentMemory, FutureScenario,
             )
             db.create_all()
-            app.logger.info("✅ Database initialized")
+            app.logger.info("[OK] Database initialized")
             _seed_agents_if_empty(app)
             _seed_data_if_empty(app)
         except Exception as e:
-            app.logger.error(f"❌ Database init failed: {e}")
+            app.logger.error(f"[ERR] Database init failed: {e}")
 
     register_blueprints(app)
     register_error_handlers(app)
     register_socketio_namespaces(app)
 
-    # Start sensor stream and event streamer in a background thread
+    # Start sensor stream, event streamer, and live rail manager in background threads
     import threading
     import os
     if os.environ.get('WERKZEUG_RUN_MAIN') == 'true' or not app.debug:
         from sensor_stream import run as run_sensor_stream
         from event_streamer import event_streamer
+        from app.services.live_rail_manager import live_rail_manager
         
         threading.Thread(target=run_sensor_stream, daemon=True, name="sensor-stream").start()
-        app.logger.info("✅ Started background sensor stream")
+        app.logger.info("[OK] Started background sensor stream")
         
         event_streamer.start()
-        app.logger.info("✅ Started event streamer daemon")
+        app.logger.info("[OK] Started event streamer daemon")
+
+        live_rail_manager.start(app)
+        app.logger.info("[OK] Started LiveRailManager")
 
     @app.route('/health', methods=['GET'])
     def health_check():
@@ -104,10 +108,10 @@ def _seed_agents_if_empty(app):
                 )
                 db.session.add(agent)
             db.session.commit()
-            app.logger.info(f"✅ Seeded {len(agent_configs)} agents")
+            app.logger.info(f"[OK] Seeded {len(agent_configs)} agents")
     except Exception as e:
         db.session.rollback()
-        app.logger.warning(f"⚠️ Agent seeding failed: {e}")
+        app.logger.warning(f"[WARN] Agent seeding failed: {e}")
 
 
 def _seed_data_if_empty(app):
@@ -118,7 +122,7 @@ def _seed_data_if_empty(app):
             from app.database.seed import seed_all
             seed_all(app)
     except Exception as e:
-        app.logger.warning(f"⚠️ Data seeding failed: {e}")
+        app.logger.warning(f"[WARN] Data seeding failed: {e}")
 
 
 def register_blueprints(app):
@@ -146,7 +150,7 @@ def register_blueprints(app):
     for bp, url_prefix in blueprints:
         app.register_blueprint(bp, url_prefix=f"{app.config['API_PREFIX']}{url_prefix}")
 
-    app.logger.info(f"✅ Registered {len(blueprints)} blueprints")
+    app.logger.info(f"[OK] Registered {len(blueprints)} blueprints")
 
 
 def register_error_handlers(app):
@@ -189,6 +193,6 @@ def register_socketio_namespaces(app):
         socketio.on_namespace(alerts_ns)
         socketio.on_namespace(replay_ns)
         socketio.on_namespace(agent_graph_gateway)
-        app.logger.info("✅ Registered 7 Socket.IO namespaces")
+        app.logger.info("[OK] Registered 7 Socket.IO namespaces")
     except Exception as e:
-        app.logger.warning(f"⚠️ Socket.IO namespace registration failed: {e}")
+        app.logger.warning(f"[WARN] Socket.IO namespace registration failed: {e}")

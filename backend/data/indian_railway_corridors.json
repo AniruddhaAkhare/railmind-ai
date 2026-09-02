@@ -1,0 +1,938 @@
+[
+  {
+    "id": "route_001",
+    "name": "Delhi - Mumbai Main Line",
+    "type": "major_corridor",
+    "stations": [
+      "NDLS",
+      "AGC",
+      "GWL",
+      "VGLJ",
+      "KOTA",
+      "RTM",
+      "BRC",
+      "ST",
+      "MMCT"
+    ],
+    "geometry": [
+      [
+        77.2197,
+        28.6431
+      ],
+      [
+        77.9944,
+        27.1592
+      ],
+      [
+        78.1772,
+        26.2124
+      ],
+      [
+        78.5685,
+        25.4484
+      ],
+      [
+        75.8648,
+        25.2138
+      ],
+      [
+        75.0357,
+        23.33
+      ],
+      [
+        73.1812,
+        22.3107
+      ],
+      [
+        72.8397,
+        21.2048
+      ],
+      [
+        72.8194,
+        18.9691
+      ]
+    ]
+  },
+  {
+    "id": "route_002",
+    "name": "Delhi - Kolkata Main Line",
+    "type": "major_corridor",
+    "stations": [
+      "NDLS",
+      "ALJN",
+      "CNB",
+      "PRYJ",
+      "DDU",
+      "PNBE",
+      "GAYA",
+      "ASN",
+      "HWH"
+    ],
+    "geometry": [
+      [
+        77.2197,
+        28.6431
+      ],
+      [
+        78.088,
+        27.8974
+      ],
+      [
+        80.3319,
+        26.4499
+      ],
+      [
+        81.8315,
+        25.4452
+      ],
+      [
+        83.1189,
+        25.2818
+      ],
+      [
+        85.1376,
+        25.6093
+      ],
+      [
+        84.9994,
+        24.7964
+      ],
+      [
+        86.9661,
+        23.6889
+      ],
+      [
+        88.3422,
+        22.5833
+      ]
+    ]
+  },
+  {
+    "id": "route_003",
+    "name": "Grand Trunk Corridor (Delhi - Chennai)",
+    "type": "major_corridor",
+    "stations": [
+      "NDLS",
+      "AGC",
+      "VGLJ",
+      "BPL",
+      "ET",
+      "NGP",
+      "BZA",
+      "MAS"
+    ],
+    "geometry": [
+      [
+        77.2197,
+        28.6431
+      ],
+      [
+        77.9944,
+        27.1592
+      ],
+      [
+        78.5685,
+        25.4484
+      ],
+      [
+        77.4126,
+        23.2599
+      ],
+      [
+        77.764,
+        22.6133
+      ],
+      [
+        79.0882,
+        21.1458
+      ],
+      [
+        80.6305,
+        16.5193
+      ],
+      [
+        80.2707,
+        13.0827
+      ]
+    ]
+  },
+  {
+    "id": "route_004",
+    "name": "Mumbai - Chennai Line",
+    "type": "major_corridor",
+    "stations": [
+      "CSMT",
+      "PUNE",
+      "DUND",
+      "SUR",
+      "SC",
+      "TPTY",
+      "MAS"
+    ],
+    "geometry": [
+      [
+        72.8354,
+        18.9398
+      ],
+      [
+        73.8567,
+        18.5204
+      ],
+      [
+        74.5939,
+        18.4658
+      ],
+      [
+        75.9064,
+        17.6599
+      ],
+      [
+        78.4983,
+        17.4399
+      ],
+      [
+        79.4192,
+        13.6288
+      ],
+      [
+        80.2707,
+        13.0827
+      ]
+    ]
+  },
+  {
+    "id": "route_005",
+    "name": "Mumbai - Howrah Line (via Nagpur & Raipur)",
+    "type": "major_corridor",
+    "stations": [
+      "CSMT",
+      "NK",
+      "BSL",
+      "NGP",
+      "G",
+      "DURG",
+      "R",
+      "BSP",
+      "TATA",
+      "KGP",
+      "HWH"
+    ],
+    "geometry": [
+      [
+        72.8354,
+        18.9398
+      ],
+      [
+        73.8344,
+        19.9547
+      ],
+      [
+        75.7946,
+        21.0454
+      ],
+      [
+        79.0882,
+        21.1458
+      ],
+      [
+        80.1961,
+        21.4608
+      ],
+      [
+        81.2849,
+        21.1904
+      ],
+      [
+        81.6296,
+        21.2514
+      ],
+      [
+        82.1409,
+        22.0797
+      ],
+      [
+        86.2029,
+        22.777
+      ],
+      [
+        87.3237,
+        22.3302
+      ],
+      [
+        88.3422,
+        22.5833
+      ]
+    ]
+  },
+  {
+    "id": "route_006",
+    "name": "East Coast Corridor (Kolkata - Chennai)",
+    "type": "major_corridor",
+    "stations": [
+      "HWH",
+      "KGP",
+      "CTC",
+      "BBS",
+      "PURI",
+      "VZM",
+      "VSKP",
+      "BZA",
+      "GNT",
+      "MAS"
+    ],
+    "geometry": [
+      [
+        88.3422,
+        22.5833
+      ],
+      [
+        87.3237,
+        22.3302
+      ],
+      [
+        85.8828,
+        20.4625
+      ],
+      [
+        85.8195,
+        20.2961
+      ],
+      [
+        85.8312,
+        19.8135
+      ],
+      [
+        83.3956,
+        18.1066
+      ],
+      [
+        83.2906,
+        17.7231
+      ],
+      [
+        80.6305,
+        16.5193
+      ],
+      [
+        80.4365,
+        16.3067
+      ],
+      [
+        80.2707,
+        13.0827
+      ]
+    ]
+  },
+  {
+    "id": "route_007",
+    "name": "Northern Main Line (Delhi - Amritsar - Jammu)",
+    "type": "major_corridor",
+    "stations": [
+      "NDLS",
+      "UMB",
+      "CDG",
+      "ASR",
+      "JAT"
+    ],
+    "geometry": [
+      [
+        77.2197,
+        28.6431
+      ],
+      [
+        76.8377,
+        30.3344
+      ],
+      [
+        76.8015,
+        30.7046
+      ],
+      [
+        74.8723,
+        31.634
+      ],
+      [
+        74.8798,
+        32.7061
+      ]
+    ]
+  },
+  {
+    "id": "route_008",
+    "name": "Western Corridor (Delhi - Jaipur - Ahmedabad)",
+    "type": "major_corridor",
+    "stations": [
+      "NDLS",
+      "JP",
+      "AII",
+      "UDZ",
+      "ADI",
+      "BRC",
+      "MMCT"
+    ],
+    "geometry": [
+      [
+        77.2197,
+        28.6431
+      ],
+      [
+        75.7873,
+        26.9124
+      ],
+      [
+        74.6399,
+        26.4499
+      ],
+      [
+        73.6967,
+        24.5714
+      ],
+      [
+        72.5714,
+        23.0225
+      ],
+      [
+        73.1812,
+        22.3107
+      ],
+      [
+        72.8194,
+        18.9691
+      ]
+    ]
+  },
+  {
+    "id": "route_009",
+    "name": "Mumbai - Ahmedabad High Speed Line",
+    "type": "major_corridor",
+    "stations": [
+      "MMCT",
+      "BDTS",
+      "ST",
+      "BRC",
+      "ADI"
+    ],
+    "geometry": [
+      [
+        72.8194,
+        18.9691
+      ],
+      [
+        72.8407,
+        19.064
+      ],
+      [
+        72.8397,
+        21.2048
+      ],
+      [
+        73.1812,
+        22.3107
+      ],
+      [
+        72.5714,
+        23.0225
+      ]
+    ]
+  },
+  {
+    "id": "route_010",
+    "name": "Mumbai - Pune Expressway Corridor",
+    "type": "major_corridor",
+    "stations": [
+      "CSMT",
+      "LTT",
+      "NK",
+      "PUNE"
+    ],
+    "geometry": [
+      [
+        72.8354,
+        18.9398
+      ],
+      [
+        72.8906,
+        19.0688
+      ],
+      [
+        73.8344,
+        19.9547
+      ],
+      [
+        73.8567,
+        18.5204
+      ]
+    ]
+  },
+  {
+    "id": "route_011",
+    "name": "Deccan Corridor (Pune - Hyderabad)",
+    "type": "major_corridor",
+    "stations": [
+      "PUNE",
+      "DUND",
+      "SUR",
+      "NED",
+      "SC",
+      "HYB"
+    ],
+    "geometry": [
+      [
+        73.8567,
+        18.5204
+      ],
+      [
+        74.5939,
+        18.4658
+      ],
+      [
+        75.9064,
+        17.6599
+      ],
+      [
+        77.315,
+        19.1558
+      ],
+      [
+        78.4983,
+        17.4399
+      ],
+      [
+        78.4678,
+        17.392
+      ]
+    ]
+  },
+  {
+    "id": "route_012",
+    "name": "Telangana - Andhra Corridor (Hyderabad - Chennai)",
+    "type": "major_corridor",
+    "stations": [
+      "SC",
+      "HYB",
+      "GNT",
+      "BZA",
+      "MAS"
+    ],
+    "geometry": [
+      [
+        78.4983,
+        17.4399
+      ],
+      [
+        78.4678,
+        17.392
+      ],
+      [
+        80.4365,
+        16.3067
+      ],
+      [
+        80.6305,
+        16.5193
+      ],
+      [
+        80.2707,
+        13.0827
+      ]
+    ]
+  },
+  {
+    "id": "route_013",
+    "name": "Chennai - Bengaluru Express Corridor",
+    "type": "major_corridor",
+    "stations": [
+      "MAS",
+      "RU",
+      "TPTY",
+      "YPR",
+      "SBC"
+    ],
+    "geometry": [
+      [
+        80.2707,
+        13.0827
+      ],
+      [
+        79.51,
+        13.6338
+      ],
+      [
+        79.4192,
+        13.6288
+      ],
+      [
+        77.5511,
+        13.0238
+      ],
+      [
+        77.5733,
+        12.9784
+      ]
+    ]
+  },
+  {
+    "id": "route_014",
+    "name": "Bengaluru - Mysuru Line",
+    "type": "regional_corridor",
+    "stations": [
+      "SBC",
+      "MYS"
+    ],
+    "geometry": [
+      [
+        77.5733,
+        12.9784
+      ],
+      [
+        76.6498,
+        12.3166
+      ]
+    ]
+  },
+  {
+    "id": "route_015",
+    "name": "South Main Line (Chennai - Madurai - Thiruvananthapuram)",
+    "type": "major_corridor",
+    "stations": [
+      "MAS",
+      "TPJ",
+      "MDU",
+      "TVC",
+      "ERS"
+    ],
+    "geometry": [
+      [
+        80.2707,
+        13.0827
+      ],
+      [
+        78.6924,
+        10.7905
+      ],
+      [
+        78.1189,
+        9.9179
+      ],
+      [
+        76.9525,
+        8.4875
+      ],
+      [
+        76.2863,
+        9.9702
+      ]
+    ]
+  },
+  {
+    "id": "route_016",
+    "name": "North-East Gateway (Kolkata - Guwahati)",
+    "type": "major_corridor",
+    "stations": [
+      "HWH",
+      "SDAH",
+      "MLDT",
+      "NJP",
+      "APDJ",
+      "GHY",
+      "KYQ"
+    ],
+    "geometry": [
+      [
+        88.3422,
+        22.5833
+      ],
+      [
+        88.3697,
+        22.5697
+      ],
+      [
+        88.1415,
+        25.0108
+      ],
+      [
+        88.4414,
+        26.6853
+      ],
+      [
+        89.5298,
+        26.5312
+      ],
+      [
+        91.7539,
+        26.1806
+      ],
+      [
+        91.7014,
+        26.1558
+      ]
+    ]
+  },
+  {
+    "id": "route_017",
+    "name": "Assam & Tripura North-East Line",
+    "type": "regional_corridor",
+    "stations": [
+      "GHY",
+      "DBRG",
+      "SCL",
+      "AGTL"
+    ],
+    "geometry": [
+      [
+        91.7539,
+        26.1806
+      ],
+      [
+        94.912,
+        27.4728
+      ],
+      [
+        92.8,
+        24.8333
+      ],
+      [
+        91.2721,
+        23.8052
+      ]
+    ]
+  },
+  {
+    "id": "route_018",
+    "name": "Oudh & Rohilkhand Corridor (Delhi - Lucknow - Varanasi)",
+    "type": "major_corridor",
+    "stations": [
+      "NDLS",
+      "MB",
+      "LKO",
+      "LJN",
+      "BSB",
+      "DDU"
+    ],
+    "geometry": [
+      [
+        77.2197,
+        28.6431
+      ],
+      [
+        78.7768,
+        28.8317
+      ],
+      [
+        80.9231,
+        26.831
+      ],
+      [
+        80.922,
+        26.8322
+      ],
+      [
+        82.9863,
+        25.327
+      ],
+      [
+        83.1189,
+        25.2818
+      ]
+    ]
+  },
+  {
+    "id": "route_019",
+    "name": "North UP & Bihar Line (Delhi - Gorakhpur - Patna)",
+    "type": "major_corridor",
+    "stations": [
+      "NDLS",
+      "LKO",
+      "GKP",
+      "MFP",
+      "PNBE"
+    ],
+    "geometry": [
+      [
+        77.2197,
+        28.6431
+      ],
+      [
+        80.9231,
+        26.831
+      ],
+      [
+        83.3732,
+        26.7606
+      ],
+      [
+        85.3647,
+        26.1209
+      ],
+      [
+        85.1376,
+        25.6093
+      ]
+    ]
+  },
+  {
+    "id": "route_020",
+    "name": "Malwa Corridor (Bhopal - Ujjain - Ratlam)",
+    "type": "regional_corridor",
+    "stations": [
+      "BPL",
+      "UJN",
+      "RTM"
+    ],
+    "geometry": [
+      [
+        77.4126,
+        23.2599
+      ],
+      [
+        75.7772,
+        23.1828
+      ],
+      [
+        75.0357,
+        23.33
+      ]
+    ]
+  },
+  {
+    "id": "route_021",
+    "name": "Konkan Railway Coastal Route",
+    "type": "major_corridor",
+    "stations": [
+      "CSMT",
+      "LTT",
+      "RN",
+      "KRMI",
+      "MAO",
+      "UDU",
+      "MAJN",
+      "CAN",
+      "CLT",
+      "ERS"
+    ],
+    "geometry": [
+      [
+        72.8354,
+        18.9398
+      ],
+      [
+        72.8906,
+        19.0688
+      ],
+      [
+        73.315,
+        16.9818
+      ],
+      [
+        73.918,
+        15.495
+      ],
+      [
+        73.9856,
+        15.275
+      ],
+      [
+        74.7421,
+        13.3409
+      ],
+      [
+        74.8688,
+        12.8687
+      ],
+      [
+        75.3704,
+        11.8745
+      ],
+      [
+        75.7804,
+        11.2474
+      ],
+      [
+        76.2863,
+        9.9702
+      ]
+    ]
+  },
+  {
+    "id": "route_022",
+    "name": "Central India Link (Jabalpur - Katni - Allahabad)",
+    "type": "regional_corridor",
+    "stations": [
+      "BPL",
+      "JBP",
+      "KTE",
+      "PRYJ"
+    ],
+    "geometry": [
+      [
+        77.4126,
+        23.2599
+      ],
+      [
+        79.9499,
+        23.16
+      ],
+      [
+        80.3956,
+        23.8344
+      ],
+      [
+        81.8315,
+        25.4452
+      ]
+    ]
+  },
+  {
+    "id": "route_023",
+    "name": "Karnataka - Goa Connection",
+    "type": "regional_corridor",
+    "stations": [
+      "UBL",
+      "BGM",
+      "MAO"
+    ],
+    "geometry": [
+      [
+        75.1438,
+        15.3508
+      ],
+      [
+        74.5089,
+        15.8497
+      ],
+      [
+        73.9856,
+        15.275
+      ]
+    ]
+  },
+  {
+    "id": "route_024",
+    "name": "Rajasthan Loop (Jaipur - Jodhpur - Bikaner)",
+    "type": "regional_corridor",
+    "stations": [
+      "JP",
+      "AII",
+      "JU",
+      "BKN"
+    ],
+    "geometry": [
+      [
+        75.7873,
+        26.9124
+      ],
+      [
+        74.6399,
+        26.4499
+      ],
+      [
+        73.0185,
+        26.2854
+      ],
+      [
+        73.3119,
+        28.016
+      ]
+    ]
+  }
+]

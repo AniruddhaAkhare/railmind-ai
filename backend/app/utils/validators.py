@@ -8,24 +8,31 @@ def validate_event_data(data: dict) -> bool:
 
     required = ['event_type', 'severity']
     for field in required:
-        if field not in data:
+        if field not in data or data[field] is None:
             raise ValueError(f"Missing required field: {field}")
 
-    if data['event_type'] not in EVENT_TYPES:
+    event_type = str(data['event_type']).lower().strip()
+    if event_type not in EVENT_TYPES:
         raise ValueError(
             f"Invalid event_type '{data['event_type']}'. "
             f"Must be one of: {EVENT_TYPES}"
         )
 
-    if data['severity'] not in SEVERITY_LEVELS:
+    severity = str(data['severity']).lower().strip()
+    if severity not in SEVERITY_LEVELS:
         raise ValueError(
             f"Invalid severity '{data['severity']}'. "
             f"Must be one of: {SEVERITY_LEVELS}"
         )
 
     priority = data.get('priority')
-    if priority is not None and not (1 <= int(priority) <= 10):
-        raise ValueError("priority must be an integer between 1 and 10")
+    if priority is not None:
+        try:
+            p_int = int(priority)
+            if not (1 <= p_int <= 10):
+                raise ValueError("priority must be an integer between 1 and 10")
+        except (ValueError, TypeError):
+            raise ValueError("priority must be an integer between 1 and 10")
 
     return True
 

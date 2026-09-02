@@ -11,6 +11,113 @@ logger = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
+# Live-context enrichment helpers
+# ---------------------------------------------------------------------------
+
+def _get_station_coords(event: Event):
+    """Return (latitude, longitude) for an event from station or metadata, or (None, None)."""
+    meta = event.event_metadata or {}
+    if meta.get('event_lat') is not None and meta.get('event_lon') is not None:
+        try:
+            return float(meta['event_lat']), float(meta['event_lon'])
+        except (ValueError, TypeError):
+            pass
+    if event.station_id:
+        try:
+            from app.models import Station
+            station = Station.query.get(event.station_id)
+            if station:
+                return station.latitude, station.longitude
+        except Exception:
+            pass
+    return None, None
+
+
+def enrich_event_with_live_context(event: Event) -> None:
+    """
+    Additively attach live-train spatial context to *event*.
+
+    Modifies only ``event.event_metadata`` (an existing JSON column).
+    Never renames or removes any existing field.  Safe to call even when
+    the live rail layer is unavailable — it simply adds nothing.
+    """
+    try:
+        from app.services.live_rail_manager import live_rail_manager
+        from app.utils.spatial import find_nearby_trains, nearest_station
+        import os
+
+        affect_radius_km = float(os.getenv("LIVE_TRAIN_AFFECT_RADIUS_KM", "25"))
+
+        # --- Resolve event coordinates from metadata or station ---
+        event_lat, event_lon = _get_station_coords(event)
+        if event_lat is None or event_lon is None:
+            return   # can't do spatial work without a location
+
+        # --- Gather all available trains (live + simulated positions) ---
+        live_trains = live_rail_manager.get_live_trains()
+
+        # Also include simulated train positions from the sensors cache
+        try:
+            from app.api.routes.sensors import _train_positions
+            for pos in _train_positions.values():
+                sim_train = {
+                    "train_number": pos.get("train_no"),
+                    "train_name": pos.get("train_name"),
+                    "latitude": pos.get("lat"),
+                    "longitude": pos.get("lng"),
+                    "current_speed": pos.get("speed_kmh"),
+                    "delay_minutes": pos.get("delay_min", 0),
+                    "source": "simulation",
+                    "stale": False,
+                }
+                live_trains.append(sim_train)
+        except Exception:
+            pass
+
+        affected = find_nearby_trains(
+            event_lat, event_lon, live_trains, radius_km=affect_radius_km
+        )
+
+        # --- Find nearest station ---
+        try:
+            from app.models import Station
+            all_stations = [
+                {"id": s.id, "name": s.name, "code": s.code,
+                 "latitude": s.latitude, "longitude": s.longitude}
+                for s in Station.query.all()
+            ]
+            nearest = nearest_station(event_lat, event_lon, all_stations)
+        except Exception:
+            nearest = None
+
+        # --- Merge into event_metadata (additive only) ---
+        metadata = dict(event.event_metadata or {})
+        metadata["affected_trains"] = affected
+        metadata["nearest_station"] = nearest
+        metadata["event_radius_km"] = affect_radius_km
+        metadata["live_context_at"] = datetime.utcnow().isoformat()
+        metadata["event_lat"] = event_lat
+        metadata["event_lon"] = event_lon
+
+        event.event_metadata = metadata
+        db.session.commit()
+
+        if affected:
+            logger.info(
+                "Event %d enriched: %d nearby trains within %.0f km",
+                event.id,
+                len(affected),
+                affect_radius_km,
+            )
+    except Exception as exc:
+        logger.warning("Event enrichment failed (non-fatal): %s", exc)
+        try:
+            db.session.rollback()
+        except Exception:
+            pass
+
+
+# ---------------------------------------------------------------------------
 # Agent pipeline definition — ordered chain of agent types per event severity
 # ---------------------------------------------------------------------------
 AGENT_PIPELINE = [
@@ -112,21 +219,90 @@ class EventService:
 
     @staticmethod
     def create_event(event_data: dict) -> Event:
-        """Create a new event and persist it."""
+        """Create a new event, persist it, and enrich it with live-rail context."""
+        station_id = event_data.get('station_id')
+        resolved_station_id = None
+        if station_id is not None:
+            if isinstance(station_id, int):
+                resolved_station_id = station_id
+            else:
+                try:
+                    resolved_station_id = int(station_id)
+                except (ValueError, TypeError):
+                    from app.models import Station
+                    st = Station.query.filter(
+                        (Station.code == str(station_id)) | (Station.name == str(station_id))
+                    ).first()
+                    if st:
+                        resolved_station_id = st.id
+
+        event_type = str(event_data.get('event_type', 'track_defect')).lower().strip()
+        severity = str(event_data.get('severity', 'medium')).lower().strip()
+
+        priority = 5
+        if event_data.get('priority') is not None:
+            try:
+                priority = int(event_data['priority'])
+            except (ValueError, TypeError):
+                priority = 5
+
+        affected_passengers = 0
+        if event_data.get('affected_passengers') is not None:
+            try:
+                affected_passengers = int(event_data['affected_passengers'])
+            except (ValueError, TypeError):
+                affected_passengers = 0
+
+        estimated_delay_minutes = 0
+        if event_data.get('estimated_delay_minutes') is not None:
+            try:
+                estimated_delay_minutes = int(event_data['estimated_delay_minutes'])
+            except (ValueError, TypeError):
+                estimated_delay_minutes = 0
+
+        track_id = None
+        if event_data.get('track_id') is not None:
+            try:
+                track_id = int(event_data['track_id'])
+            except (ValueError, TypeError):
+                track_id = None
+
+        train_id = None
+        if event_data.get('train_id') is not None:
+            try:
+                train_id = int(event_data['train_id'])
+            except (ValueError, TypeError):
+                train_id = None
+
+        metadata = dict(event_data.get('event_metadata') or {})
+        if 'latitude' in event_data and 'longitude' in event_data:
+            try:
+                metadata['event_lat'] = float(event_data['latitude'])
+                metadata['event_lon'] = float(event_data['longitude'])
+            except (ValueError, TypeError):
+                pass
+
         event = Event(
-            event_type=event_data.get('event_type'),
-            severity=event_data.get('severity', 'medium'),
-            priority=event_data.get('priority', 5),
+            event_type=event_type,
+            severity=severity,
+            priority=priority,
             description=event_data.get('description'),
-            station_id=event_data.get('station_id'),
-            track_id=event_data.get('track_id'),
-            train_id=event_data.get('train_id'),
-            affected_passengers=event_data.get('affected_passengers', 0),
-            estimated_delay_minutes=event_data.get('estimated_delay_minutes', 0),
-            event_metadata=event_data.get('event_metadata', {}),
+            station_id=resolved_station_id,
+            track_id=track_id,
+            train_id=train_id,
+            affected_passengers=affected_passengers,
+            estimated_delay_minutes=estimated_delay_minutes,
+            event_metadata=metadata,
         )
         db.session.add(event)
         db.session.commit()
+
+        # Additively attach live-train spatial context — never mutates existing fields
+        try:
+            enrich_event_with_live_context(event)
+        except Exception as exc:
+            logger.warning("Live context enrichment error: %s", exc)
+
         return event
 
     @staticmethod

@@ -1,0 +1,965 @@
+[
+  {
+    "id": "NDLS",
+    "name": "New Delhi",
+    "code": "NDLS",
+    "latitude": 28.6431,
+    "longitude": 77.2197,
+    "type": "major_junction",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "DLI",
+    "name": "Old Delhi",
+    "code": "DLI",
+    "latitude": 28.6614,
+    "longitude": 77.2285,
+    "type": "major_junction",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "NZM",
+    "name": "Hazrat Nizamuddin",
+    "code": "NZM",
+    "latitude": 28.5892,
+    "longitude": 77.2515,
+    "type": "major_junction",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "LKO",
+    "name": "Lucknow Charbagh",
+    "code": "LKO",
+    "latitude": 26.831,
+    "longitude": 80.9231,
+    "type": "major_junction",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "BSB",
+    "name": "Varanasi Junction",
+    "code": "BSB",
+    "latitude": 25.327,
+    "longitude": 82.9863,
+    "type": "major_junction",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "ASR",
+    "name": "Amritsar Junction",
+    "code": "ASR",
+    "latitude": 31.634,
+    "longitude": 74.8723,
+    "type": "major_junction",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "JAT",
+    "name": "Jammu Tawi",
+    "code": "JAT",
+    "latitude": 32.7061,
+    "longitude": 74.8798,
+    "type": "major_junction",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "UMB",
+    "name": "Ambala Cantt",
+    "code": "UMB",
+    "latitude": 30.3344,
+    "longitude": 76.8377,
+    "type": "major_junction",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "CDG",
+    "name": "Chandigarh",
+    "code": "CDG",
+    "latitude": 30.7046,
+    "longitude": 76.8015,
+    "type": "station",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "DDN",
+    "name": "Dehradun",
+    "code": "DDN",
+    "latitude": 30.3165,
+    "longitude": 78.0322,
+    "type": "station",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "MB",
+    "name": "Moradabad",
+    "code": "MB",
+    "latitude": 28.8317,
+    "longitude": 78.7768,
+    "type": "major_junction",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "ALJN",
+    "name": "Aligarh Junction",
+    "code": "ALJN",
+    "latitude": 27.8974,
+    "longitude": 78.088,
+    "type": "station",
+    "zone": "Northern Railway"
+  },
+  {
+    "id": "MMCT",
+    "name": "Mumbai Central",
+    "code": "MMCT",
+    "latitude": 18.9691,
+    "longitude": 72.8194,
+    "type": "major_junction",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "BDTS",
+    "name": "Bandra Terminus",
+    "code": "BDTS",
+    "latitude": 19.064,
+    "longitude": 72.8407,
+    "type": "major_junction",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "ADI",
+    "name": "Ahmedabad Junction",
+    "code": "ADI",
+    "latitude": 23.0225,
+    "longitude": 72.5714,
+    "type": "major_junction",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "BRC",
+    "name": "Vadodara Junction",
+    "code": "BRC",
+    "latitude": 22.3107,
+    "longitude": 73.1812,
+    "type": "major_junction",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "ST",
+    "name": "Surat",
+    "code": "ST",
+    "latitude": 21.2048,
+    "longitude": 72.8397,
+    "type": "major_junction",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "RTM",
+    "name": "Ratlam Junction",
+    "code": "RTM",
+    "latitude": 23.33,
+    "longitude": 75.0357,
+    "type": "major_junction",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "RJT",
+    "name": "Rajkot Junction",
+    "code": "RJT",
+    "latitude": 22.3039,
+    "longitude": 70.8022,
+    "type": "station",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "BVP",
+    "name": "Bhavnagar Terminus",
+    "code": "BVP",
+    "latitude": 21.7645,
+    "longitude": 72.1519,
+    "type": "station",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "DWK",
+    "name": "Dwarka",
+    "code": "DWK",
+    "latitude": 22.2442,
+    "longitude": 68.9685,
+    "type": "station",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "UJN",
+    "name": "Ujjain Junction",
+    "code": "UJN",
+    "latitude": 23.1828,
+    "longitude": 75.7772,
+    "type": "major_junction",
+    "zone": "Western Railway"
+  },
+  {
+    "id": "CSMT",
+    "name": "Mumbai CST",
+    "code": "CSMT",
+    "latitude": 18.9398,
+    "longitude": 72.8354,
+    "type": "major_junction",
+    "zone": "Central Railway"
+  },
+  {
+    "id": "LTT",
+    "name": "Lokmanya Tilak Terminus",
+    "code": "LTT",
+    "latitude": 19.0688,
+    "longitude": 72.8906,
+    "type": "major_junction",
+    "zone": "Central Railway"
+  },
+  {
+    "id": "PUNE",
+    "name": "Pune Junction",
+    "code": "PUNE",
+    "latitude": 18.5204,
+    "longitude": 73.8567,
+    "type": "major_junction",
+    "zone": "Central Railway"
+  },
+  {
+    "id": "NGP",
+    "name": "Nagpur Junction",
+    "code": "NGP",
+    "latitude": 21.1458,
+    "longitude": 79.0882,
+    "type": "major_junction",
+    "zone": "Central Railway"
+  },
+  {
+    "id": "BSL",
+    "name": "Bhusaval Junction",
+    "code": "BSL",
+    "latitude": 21.0454,
+    "longitude": 75.7946,
+    "type": "major_junction",
+    "zone": "Central Railway"
+  },
+  {
+    "id": "NK",
+    "name": "Nashik Road",
+    "code": "NK",
+    "latitude": 19.9547,
+    "longitude": 73.8344,
+    "type": "station",
+    "zone": "Central Railway"
+  },
+  {
+    "id": "SUR",
+    "name": "Solapur",
+    "code": "SUR",
+    "latitude": 17.6599,
+    "longitude": 75.9064,
+    "type": "major_junction",
+    "zone": "Central Railway"
+  },
+  {
+    "id": "KOP",
+    "name": "Kolhapur",
+    "code": "KOP",
+    "latitude": 16.6997,
+    "longitude": 74.2433,
+    "type": "station",
+    "zone": "Central Railway"
+  },
+  {
+    "id": "DUND",
+    "name": "Daund Junction",
+    "code": "DUND",
+    "latitude": 18.4658,
+    "longitude": 74.5939,
+    "type": "major_junction",
+    "zone": "Central Railway"
+  },
+  {
+    "id": "HWH",
+    "name": "Howrah Junction",
+    "code": "HWH",
+    "latitude": 22.5833,
+    "longitude": 88.3422,
+    "type": "major_junction",
+    "zone": "Eastern Railway"
+  },
+  {
+    "id": "SDAH",
+    "name": "Sealdah",
+    "code": "SDAH",
+    "latitude": 22.5697,
+    "longitude": 88.3697,
+    "type": "major_junction",
+    "zone": "Eastern Railway"
+  },
+  {
+    "id": "KOAA",
+    "name": "Kolkata Terminal",
+    "code": "KOAA",
+    "latitude": 22.6025,
+    "longitude": 88.3742,
+    "type": "station",
+    "zone": "Eastern Railway"
+  },
+  {
+    "id": "ASN",
+    "name": "Asansol Junction",
+    "code": "ASN",
+    "latitude": 23.6889,
+    "longitude": 86.9661,
+    "type": "major_junction",
+    "zone": "Eastern Railway"
+  },
+  {
+    "id": "MLDT",
+    "name": "Malda Town",
+    "code": "MLDT",
+    "latitude": 25.0108,
+    "longitude": 88.1415,
+    "type": "station",
+    "zone": "Eastern Railway"
+  },
+  {
+    "id": "BGP",
+    "name": "Bhagalpur Junction",
+    "code": "BGP",
+    "latitude": 25.2425,
+    "longitude": 87.0125,
+    "type": "station",
+    "zone": "Eastern Railway"
+  },
+  {
+    "id": "TATA",
+    "name": "Tatanagar Junction",
+    "code": "TATA",
+    "latitude": 22.777,
+    "longitude": 86.2029,
+    "type": "major_junction",
+    "zone": "South Eastern Railway"
+  },
+  {
+    "id": "RNC",
+    "name": "Ranchi Junction",
+    "code": "RNC",
+    "latitude": 23.3441,
+    "longitude": 85.324,
+    "type": "major_junction",
+    "zone": "South Eastern Railway"
+  },
+  {
+    "id": "KGP",
+    "name": "Kharagpur Junction",
+    "code": "KGP",
+    "latitude": 22.3302,
+    "longitude": 87.3237,
+    "type": "major_junction",
+    "zone": "South Eastern Railway"
+  },
+  {
+    "id": "CKP",
+    "name": "Chakradharpur",
+    "code": "CKP",
+    "latitude": 22.6974,
+    "longitude": 85.6267,
+    "type": "station",
+    "zone": "South Eastern Railway"
+  },
+  {
+    "id": "MAS",
+    "name": "Chennai Central",
+    "code": "MAS",
+    "latitude": 13.0827,
+    "longitude": 80.2707,
+    "type": "major_junction",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "MS",
+    "name": "Chennai Egmore",
+    "code": "MS",
+    "latitude": 13.0815,
+    "longitude": 80.2618,
+    "type": "major_junction",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "CBE",
+    "name": "Coimbatore Junction",
+    "code": "CBE",
+    "latitude": 11.0018,
+    "longitude": 76.9629,
+    "type": "major_junction",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "MDU",
+    "name": "Madurai Junction",
+    "code": "MDU",
+    "latitude": 9.9179,
+    "longitude": 78.1189,
+    "type": "major_junction",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "ERS",
+    "name": "Ernakulam Junction",
+    "code": "ERS",
+    "latitude": 9.9702,
+    "longitude": 76.2863,
+    "type": "major_junction",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "TVC",
+    "name": "Thiruvananthapuram Central",
+    "code": "TVC",
+    "latitude": 8.4875,
+    "longitude": 76.9525,
+    "type": "major_junction",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "TPJ",
+    "name": "Tiruchchirappalli Junction",
+    "code": "TPJ",
+    "latitude": 10.7905,
+    "longitude": 78.6924,
+    "type": "major_junction",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "CLT",
+    "name": "Kozhikode",
+    "code": "CLT",
+    "latitude": 11.2474,
+    "longitude": 75.7804,
+    "type": "station",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "CAN",
+    "name": "Kannur",
+    "code": "CAN",
+    "latitude": 11.8745,
+    "longitude": 75.3704,
+    "type": "station",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "SC",
+    "name": "Secunderabad Junction",
+    "code": "SC",
+    "latitude": 17.4399,
+    "longitude": 78.4983,
+    "type": "major_junction",
+    "zone": "South Central Railway"
+  },
+  {
+    "id": "HYB",
+    "name": "Hyderabad Deccan",
+    "code": "HYB",
+    "latitude": 17.392,
+    "longitude": 78.4678,
+    "type": "major_junction",
+    "zone": "South Central Railway"
+  },
+  {
+    "id": "BZA",
+    "name": "Vijayawada Junction",
+    "code": "BZA",
+    "latitude": 16.5193,
+    "longitude": 80.6305,
+    "type": "major_junction",
+    "zone": "South Central Railway"
+  },
+  {
+    "id": "TPTY",
+    "name": "Tirupati",
+    "code": "TPTY",
+    "latitude": 13.6288,
+    "longitude": 79.4192,
+    "type": "major_junction",
+    "zone": "South Central Railway"
+  },
+  {
+    "id": "GNT",
+    "name": "Guntur Junction",
+    "code": "GNT",
+    "latitude": 16.3067,
+    "longitude": 80.4365,
+    "type": "station",
+    "zone": "South Central Railway"
+  },
+  {
+    "id": "NED",
+    "name": "Nanded",
+    "code": "NED",
+    "latitude": 19.1558,
+    "longitude": 77.315,
+    "type": "station",
+    "zone": "South Central Railway"
+  },
+  {
+    "id": "RU",
+    "name": "Renigunta Junction",
+    "code": "RU",
+    "latitude": 13.6338,
+    "longitude": 79.51,
+    "type": "station",
+    "zone": "South Central Railway"
+  },
+  {
+    "id": "SBC",
+    "name": "KSR Bengaluru City",
+    "code": "SBC",
+    "latitude": 12.9784,
+    "longitude": 77.5733,
+    "type": "major_junction",
+    "zone": "South Western Railway"
+  },
+  {
+    "id": "YPR",
+    "name": "Yesvantpur Junction",
+    "code": "YPR",
+    "latitude": 13.0238,
+    "longitude": 77.5511,
+    "type": "major_junction",
+    "zone": "South Western Railway"
+  },
+  {
+    "id": "MYS",
+    "name": "Mysuru Junction",
+    "code": "MYS",
+    "latitude": 12.3166,
+    "longitude": 76.6498,
+    "type": "station",
+    "zone": "South Western Railway"
+  },
+  {
+    "id": "UBL",
+    "name": "Hubballi Junction",
+    "code": "UBL",
+    "latitude": 15.3508,
+    "longitude": 75.1438,
+    "type": "major_junction",
+    "zone": "South Western Railway"
+  },
+  {
+    "id": "BGM",
+    "name": "Belagavi",
+    "code": "BGM",
+    "latitude": 15.8497,
+    "longitude": 74.5089,
+    "type": "station",
+    "zone": "South Western Railway"
+  },
+  {
+    "id": "BBS",
+    "name": "Bhubaneswar",
+    "code": "BBS",
+    "latitude": 20.2961,
+    "longitude": 85.8195,
+    "type": "major_junction",
+    "zone": "East Coast Railway"
+  },
+  {
+    "id": "CTC",
+    "name": "Cuttack",
+    "code": "CTC",
+    "latitude": 20.4625,
+    "longitude": 85.8828,
+    "type": "station",
+    "zone": "East Coast Railway"
+  },
+  {
+    "id": "VSKP",
+    "name": "Visakhapatnam Junction",
+    "code": "VSKP",
+    "latitude": 17.7231,
+    "longitude": 83.2906,
+    "type": "major_junction",
+    "zone": "East Coast Railway"
+  },
+  {
+    "id": "PURI",
+    "name": "Puri",
+    "code": "PURI",
+    "latitude": 19.8135,
+    "longitude": 85.8312,
+    "type": "station",
+    "zone": "East Coast Railway"
+  },
+  {
+    "id": "VZM",
+    "name": "Vizianagaram Junction",
+    "code": "VZM",
+    "latitude": 18.1066,
+    "longitude": 83.3956,
+    "type": "station",
+    "zone": "East Coast Railway"
+  },
+  {
+    "id": "BPL",
+    "name": "Bhopal Junction",
+    "code": "BPL",
+    "latitude": 23.2599,
+    "longitude": 77.4126,
+    "type": "major_junction",
+    "zone": "West Central Railway"
+  },
+  {
+    "id": "JBP",
+    "name": "Jabalpur Junction",
+    "code": "JBP",
+    "latitude": 23.16,
+    "longitude": 79.9499,
+    "type": "major_junction",
+    "zone": "West Central Railway"
+  },
+  {
+    "id": "KOTA",
+    "name": "Kota Junction",
+    "code": "KOTA",
+    "latitude": 25.2138,
+    "longitude": 75.8648,
+    "type": "major_junction",
+    "zone": "West Central Railway"
+  },
+  {
+    "id": "ET",
+    "name": "Itarsi Junction",
+    "code": "ET",
+    "latitude": 22.6133,
+    "longitude": 77.764,
+    "type": "major_junction",
+    "zone": "West Central Railway"
+  },
+  {
+    "id": "KTE",
+    "name": "Katni Junction",
+    "code": "KTE",
+    "latitude": 23.8344,
+    "longitude": 80.3956,
+    "type": "station",
+    "zone": "West Central Railway"
+  },
+  {
+    "id": "PNBE",
+    "name": "Patna Junction",
+    "code": "PNBE",
+    "latitude": 25.6093,
+    "longitude": 85.1376,
+    "type": "major_junction",
+    "zone": "East Central Railway"
+  },
+  {
+    "id": "DHN",
+    "name": "Dhanbad Junction",
+    "code": "DHN",
+    "latitude": 23.7957,
+    "longitude": 86.4304,
+    "type": "major_junction",
+    "zone": "East Central Railway"
+  },
+  {
+    "id": "DDU",
+    "name": "Pt. Deen Dayal Upadhyaya",
+    "code": "DDU",
+    "latitude": 25.2818,
+    "longitude": 83.1189,
+    "type": "major_junction",
+    "zone": "East Central Railway"
+  },
+  {
+    "id": "GAYA",
+    "name": "Gaya Junction",
+    "code": "GAYA",
+    "latitude": 24.7964,
+    "longitude": 84.9994,
+    "type": "station",
+    "zone": "East Central Railway"
+  },
+  {
+    "id": "MFP",
+    "name": "Muzaffarpur Junction",
+    "code": "MFP",
+    "latitude": 26.1209,
+    "longitude": 85.3647,
+    "type": "station",
+    "zone": "East Central Railway"
+  },
+  {
+    "id": "PRYJ",
+    "name": "Prayagraj Junction",
+    "code": "PRYJ",
+    "latitude": 25.4452,
+    "longitude": 81.8315,
+    "type": "major_junction",
+    "zone": "North Central Railway"
+  },
+  {
+    "id": "CNB",
+    "name": "Kanpur Central",
+    "code": "CNB",
+    "latitude": 26.4499,
+    "longitude": 80.3319,
+    "type": "major_junction",
+    "zone": "North Central Railway"
+  },
+  {
+    "id": "AGC",
+    "name": "Agra Cantt",
+    "code": "AGC",
+    "latitude": 27.1592,
+    "longitude": 77.9944,
+    "type": "major_junction",
+    "zone": "North Central Railway"
+  },
+  {
+    "id": "VGLJ",
+    "name": "Jhansi Junction",
+    "code": "VGLJ",
+    "latitude": 25.4484,
+    "longitude": 78.5685,
+    "type": "major_junction",
+    "zone": "North Central Railway"
+  },
+  {
+    "id": "GWL",
+    "name": "Gwalior Junction",
+    "code": "GWL",
+    "latitude": 26.2124,
+    "longitude": 78.1772,
+    "type": "station",
+    "zone": "North Central Railway"
+  },
+  {
+    "id": "GKP",
+    "name": "Gorakhpur Junction",
+    "code": "GKP",
+    "latitude": 26.7606,
+    "longitude": 83.3732,
+    "type": "major_junction",
+    "zone": "North Eastern Railway"
+  },
+  {
+    "id": "LJN",
+    "name": "Lucknow Junction",
+    "code": "LJN",
+    "latitude": 26.8322,
+    "longitude": 80.922,
+    "type": "station",
+    "zone": "North Eastern Railway"
+  },
+  {
+    "id": "CPA",
+    "name": "Kanpur Anwarganj",
+    "code": "CPA",
+    "latitude": 26.4674,
+    "longitude": 80.3241,
+    "type": "station",
+    "zone": "North Eastern Railway"
+  },
+  {
+    "id": "BC",
+    "name": "Bareilly City",
+    "code": "BC",
+    "latitude": 28.367,
+    "longitude": 79.4304,
+    "type": "station",
+    "zone": "North Eastern Railway"
+  },
+  {
+    "id": "JP",
+    "name": "Jaipur Junction",
+    "code": "JP",
+    "latitude": 26.9124,
+    "longitude": 75.7873,
+    "type": "major_junction",
+    "zone": "North Western Railway"
+  },
+  {
+    "id": "JU",
+    "name": "Jodhpur Junction",
+    "code": "JU",
+    "latitude": 26.2854,
+    "longitude": 73.0185,
+    "type": "major_junction",
+    "zone": "North Western Railway"
+  },
+  {
+    "id": "BKN",
+    "name": "Bikaner Junction",
+    "code": "BKN",
+    "latitude": 28.016,
+    "longitude": 73.3119,
+    "type": "station",
+    "zone": "North Western Railway"
+  },
+  {
+    "id": "AII",
+    "name": "Ajmer Junction",
+    "code": "AII",
+    "latitude": 26.4499,
+    "longitude": 74.6399,
+    "type": "major_junction",
+    "zone": "North Western Railway"
+  },
+  {
+    "id": "UDZ",
+    "name": "Udaipur City",
+    "code": "UDZ",
+    "latitude": 24.5714,
+    "longitude": 73.6967,
+    "type": "station",
+    "zone": "North Western Railway"
+  },
+  {
+    "id": "GHY",
+    "name": "Guwahati",
+    "code": "GHY",
+    "latitude": 26.1806,
+    "longitude": 91.7539,
+    "type": "major_junction",
+    "zone": "Northeast Frontier Railway"
+  },
+  {
+    "id": "KYQ",
+    "name": "Kamakhya Junction",
+    "code": "KYQ",
+    "latitude": 26.1558,
+    "longitude": 91.7014,
+    "type": "station",
+    "zone": "Northeast Frontier Railway"
+  },
+  {
+    "id": "NJP",
+    "name": "New Jalpaiguri",
+    "code": "NJP",
+    "latitude": 26.6853,
+    "longitude": 88.4414,
+    "type": "major_junction",
+    "zone": "Northeast Frontier Railway"
+  },
+  {
+    "id": "DBRG",
+    "name": "Dibrugarh",
+    "code": "DBRG",
+    "latitude": 27.4728,
+    "longitude": 94.912,
+    "type": "station",
+    "zone": "Northeast Frontier Railway"
+  },
+  {
+    "id": "SCL",
+    "name": "Silchar",
+    "code": "SCL",
+    "latitude": 24.8333,
+    "longitude": 92.8,
+    "type": "station",
+    "zone": "Northeast Frontier Railway"
+  },
+  {
+    "id": "AGTL",
+    "name": "Agartala",
+    "code": "AGTL",
+    "latitude": 23.8052,
+    "longitude": 91.2721,
+    "type": "station",
+    "zone": "Northeast Frontier Railway"
+  },
+  {
+    "id": "APDJ",
+    "name": "Alipurduar Junction",
+    "code": "APDJ",
+    "latitude": 26.5312,
+    "longitude": 89.5298,
+    "type": "station",
+    "zone": "Northeast Frontier Railway"
+  },
+  {
+    "id": "R",
+    "name": "Raipur Junction",
+    "code": "R",
+    "latitude": 21.2514,
+    "longitude": 81.6296,
+    "type": "major_junction",
+    "zone": "South East Central Railway"
+  },
+  {
+    "id": "BSP",
+    "name": "Bilaspur Junction",
+    "code": "BSP",
+    "latitude": 22.0797,
+    "longitude": 82.1409,
+    "type": "major_junction",
+    "zone": "South East Central Railway"
+  },
+  {
+    "id": "DURG",
+    "name": "Durg Junction",
+    "code": "DURG",
+    "latitude": 21.1904,
+    "longitude": 81.2849,
+    "type": "station",
+    "zone": "South East Central Railway"
+  },
+  {
+    "id": "G",
+    "name": "Gondia Junction",
+    "code": "G",
+    "latitude": 21.4608,
+    "longitude": 80.1961,
+    "type": "station",
+    "zone": "South East Central Railway"
+  },
+  {
+    "id": "MAJN",
+    "name": "Mangaluru Junction",
+    "code": "MAJN",
+    "latitude": 12.8687,
+    "longitude": 74.8688,
+    "type": "major_junction",
+    "zone": "Southern Railway"
+  },
+  {
+    "id": "MAO",
+    "name": "Madgaon Junction",
+    "code": "MAO",
+    "latitude": 15.275,
+    "longitude": 73.9856,
+    "type": "major_junction",
+    "zone": "Konkan Railway"
+  },
+  {
+    "id": "RN",
+    "name": "Ratnagiri",
+    "code": "RN",
+    "latitude": 16.9818,
+    "longitude": 73.315,
+    "type": "station",
+    "zone": "Konkan Railway"
+  },
+  {
+    "id": "KRMI",
+    "name": "Karmali",
+    "code": "KRMI",
+    "latitude": 15.495,
+    "longitude": 73.918,
+    "type": "station",
+    "zone": "Konkan Railway"
+  },
+  {
+    "id": "UDU",
+    "name": "Udupi",
+    "code": "UDU",
+    "latitude": 13.3409,
+    "longitude": 74.7421,
+    "type": "station",
+    "zone": "Konkan Railway"
+  }
+]
