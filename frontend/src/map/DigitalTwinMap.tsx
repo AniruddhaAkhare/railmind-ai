@@ -254,7 +254,8 @@ export default function DigitalTwinMap() {
     const healthInterval = setInterval(fetchHealth, 5000)
 
     // Connect Socket.IO for real-time sensor & live train streams
-    const socket = io('http://localhost:5000/pulse_stream', { transports: ['websocket', 'polling'] })
+    const socketBase = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000'
+    const socket = io(`${socketBase}/pulse_stream`, { transports: ['websocket', 'polling'] })
     
     socket.on('train_position', (data: any) => {
       if (!data || !data.train_no) return

@@ -20,7 +20,8 @@ export default function EmergencyControlPanel() {
       
       // Trigger actual backend LLM pipeline for simulation
       try {
-        await fetch('http://localhost:5000/api/events', {
+        const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+        await fetch(`${apiBase}/api/events`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
