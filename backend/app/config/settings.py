@@ -43,7 +43,7 @@ class Config:
     OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1'
     OPENROUTER_DEFAULT_MODEL = os.getenv(
         'OPENROUTER_MODEL',
-        'meta-llama/llama-2-7b-chat'
+        'meta-llama/llama-3.3-70b-instruct:free'
     ).strip()
 
     # Socket.IO
