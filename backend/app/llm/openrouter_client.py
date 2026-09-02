@@ -9,9 +9,9 @@ class OpenRouterClient:
 
     def __init__(self):
         config = get_config()
-        self.api_key = config.OPENROUTER_API_KEY
-        self.base_url = config.OPENROUTER_BASE_URL
-        self.default_model = config.OPENROUTER_DEFAULT_MODEL
+        self.api_key = (config.OPENROUTER_API_KEY or '').strip()
+        self.base_url = config.OPENROUTER_BASE_URL.rstrip('/')
+        self.default_model = (config.OPENROUTER_DEFAULT_MODEL or '').strip()
 
     def query(self, prompt: str, model: str = None,
               temperature: float = 0.7, max_tokens: int = 1000) -> dict:

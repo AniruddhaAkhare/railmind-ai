@@ -39,12 +39,12 @@ class Config:
     REDIS_CACHE_TTL = int(os.getenv('REDIS_CACHE_TTL', 3600))
 
     # OpenRouter LLM
-    OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', '')
+    OPENROUTER_API_KEY = os.getenv('OPENROUTER_API_KEY', '').strip()
     OPENROUTER_BASE_URL = 'https://openrouter.ai/api/v1'
     OPENROUTER_DEFAULT_MODEL = os.getenv(
         'OPENROUTER_MODEL',
         'meta-llama/llama-2-7b-chat'
-    )
+    ).strip()
 
     # Socket.IO
     SOCKETIO_MESSAGE_QUEUE = os.getenv('SOCKETIO_MESSAGE_QUEUE', None)
